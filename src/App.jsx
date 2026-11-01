@@ -34,18 +34,18 @@ export default function App() {
           </MobileAlternatingSection>
         </StoryToShopBurstWrapper>
 
-        {/* Page 4: Benefits — Pops up from the RIGHT side on mobile */}
-        <MobileAlternatingSection direction="right" id="benefits-mobile-wrap">
+        {/* Page 4: Benefits (Even #4) — Pops up from the LEFT side */}
+        <MobileAlternatingSection direction="left" id="benefits-mobile-wrap">
           <BenefitsSection />
         </MobileAlternatingSection>
 
-        {/* Page 5: Wholesale — Pops up from the LEFT side on mobile */}
-        <MobileAlternatingSection direction="left" id="wholesale-mobile-wrap">
+        {/* Page 5: Wholesale (Odd #5) — Pops up from the RIGHT side */}
+        <MobileAlternatingSection direction="right" id="wholesale-mobile-wrap">
           <WholesaleSection />
         </MobileAlternatingSection>
 
-        {/* Page 6: Contact — Pops up from the RIGHT side on mobile */}
-        <MobileAlternatingSection direction="right" id="contact-mobile-wrap">
+        {/* Page 6: Contact (Even #6) — Pops up from the LEFT side */}
+        <MobileAlternatingSection direction="left" id="contact-mobile-wrap">
           <ContactSection />
         </MobileAlternatingSection>
       </main>

@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 import { useReducedMotionSafe } from './hooks/useReducedMotionSafe';
 import pouchPeriPeri from './assets/hero/pouchPeriPeri.png';
@@ -188,7 +188,16 @@ function DecoD({ id, style = {} }) {
 export default function HeroSection() {
   const sectionRef = useRef(null);
   const [kraftLanded, setKraftLanded] = useState(false);
+  const [shiftIndex, setShiftIndex] = useState(0);
   const reducedMotion = useReducedMotionSafe();
+
+  /* Cycle the 3 packages positions every 2 seconds */
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setShiftIndex((prev) => (prev + 1) % 3);
+    }, 2000);
+    return () => clearInterval(timer);
+  }, []);
 
   const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
   const { scrollYProgress } = useScroll({
@@ -271,7 +280,7 @@ export default function HeroSection() {
           ))}
         </motion.div>
 
-        {/* 3D Pouches Scene */}
+        {/* 3D Pouches Scene with dynamic 2-second place shifting */}
         <div
           style={{
             position: 'absolute',
@@ -281,109 +290,74 @@ export default function HeroSection() {
             pointerEvents: isExiting ? 'none' : 'auto',
           }}
         >
-          {/* Left Peri Peri Pouch */}
-          <motion.div
-            style={{
-              position: 'absolute',
-              inset: 0,
-              y: reducedMotion ? 0 : greenExitY,
-              scale: reducedMotion ? 1 : greenExitScale,
-              opacity: isMobile ? 1 : greenExitOpacity,
-              transformStyle: 'preserve-3d',
-              pointerEvents: 'none',
-            }}
-          >
-            <motion.div
-              style={{
-                ...boxD(313.5, 260, 131, 196),
-                zIndex: 10,
-                cursor: 'pointer',
-                pointerEvents: 'auto',
-                transformStyle: 'preserve-3d',
-              }}
-              initial={{ opacity: 0, y: 90, rotate: 0, scale: 0.85 }}
-              whileInView={{ opacity: 1, y: 0, rotate: -8, scale: 1 }}
-              viewport={{ once: false, amount: 0.3 }}
-              transition={{ type: 'spring', stiffness: 70, damping: 14, delay: 0.25 }}
-              whileHover={{ scale: 1.08, rotate: 0, rotateY: 15 }}
-            >
-              <img
-                src={pouchPeriPeri}
-                alt="Enjoyeat Peri Peri Makhana"
-                draggable={false}
-                style={{ width: '100%', height: '100%', objectFit: 'contain' }}
-              />
-            </motion.div>
-          </motion.div>
+          {(() => {
+            // 3 Desktop spot presets: Left (0), Center (1), Right (2)
+            const desktopSlots = [
+              { x: 313.5, y: 260, w: 131, h: 196, rotate: -8, zIndex: 10, scale: 0.96 },
+              { x: 445,   y: 235, w: 136, h: 221, rotate: 0,  zIndex: 20, scale: 1.05 },
+              { x: 587.5, y: 263, w: 127.5, h: 193, rotate: 8, zIndex: 10, scale: 0.96 },
+            ];
 
-          {/* Center Flagship Raw Makhana Pouch */}
-          <motion.div
-            style={{
-              position: 'absolute',
-              inset: 0,
-              y: reducedMotion ? 0 : goldExitY,
-              scale: reducedMotion ? 1 : goldExitScale,
-              opacity: isMobile ? 1 : goldExitOpacity,
-              transformStyle: 'preserve-3d',
-              pointerEvents: 'none',
-            }}
-          >
-            <motion.div
-              style={{
-                ...boxD(445, 235, 136, 221),
-                zIndex: 20,
-                cursor: 'pointer',
-                pointerEvents: 'auto',
-                transformStyle: 'preserve-3d',
-              }}
-              initial={{ opacity: 0, y: 120, scale: 0.8 }}
-              whileInView={{ opacity: 1, y: 0, scale: 1 }}
-              viewport={{ once: false, amount: 0.3 }}
-              transition={{ type: 'spring', stiffness: 80, damping: 12, delay: 0.1 }}
-              whileHover={{ scale: 1.1, rotateY: 12 }}
-            >
-              <img
-                src={pouchRawMakhana}
-                alt="Enjoyeat Premium Raw Makhana"
-                draggable={false}
-                style={{ width: '100%', height: '100%', objectFit: 'contain' }}
-              />
-            </motion.div>
-          </motion.div>
+            const pouches = [
+              { id: 'peri', img: pouchPeriPeri, alt: 'Enjoyeat Peri Peri Makhana', exitY: greenExitY, exitScale: greenExitScale, exitOpacity: greenExitOpacity },
+              { id: 'raw', img: pouchRawMakhana, alt: 'Enjoyeat Premium Raw Makhana', exitY: goldExitY, exitScale: goldExitScale, exitOpacity: goldExitOpacity },
+              { id: 'tom', img: pouchTangyTomato, alt: 'Enjoyeat Tangy Tomato Makhana', exitY: kraftExitY, exitScale: kraftExitScale, exitOpacity: kraftExitOpacity },
+            ];
 
-          {/* Right Tangy Tomato Pouch */}
-          <motion.div
-            style={{
-              position: 'absolute',
-              inset: 0,
-              y: reducedMotion ? 0 : kraftExitY,
-              scale: reducedMotion ? 1 : kraftExitScale,
-              opacity: isMobile ? 1 : kraftExitOpacity,
-              transformStyle: 'preserve-3d',
-              pointerEvents: 'none',
-            }}
-          >
-            <motion.div
-              style={{
-                ...boxD(587.5, 263, 127.5, 193),
-                zIndex: 10,
-                cursor: 'pointer',
-                pointerEvents: 'auto',
-                transformStyle: 'preserve-3d',
-              }}
-              initial={{ opacity: 0, y: -400, rotate: -15, scale: 0.7 }}
-              animate={{ opacity: 1, y: 0, rotate: 8, scale: 1 }}
-              transition={{ type: 'spring', stiffness: 60, damping: 11, delay: 0.35 }}
-              whileHover={{ scale: 1.08, rotate: 0, rotateY: -15 }}
-            >
-              <img
-                src={pouchTangyTomato}
-                alt="Enjoyeat Tangy Tomato Makhana"
-                draggable={false}
-                style={{ width: '100%', height: '100%', objectFit: 'contain' }}
-              />
-            </motion.div>
-          </motion.div>
+            return pouches.map((p, idx) => {
+              // Calculate which slot this pouch currently occupies (shifting every 2s)
+              const currentSlotIndex = (idx + shiftIndex) % 3;
+              const slot = desktopSlots[currentSlotIndex];
+
+              return (
+                <motion.div
+                  key={p.id}
+                  style={{
+                    position: 'absolute',
+                    inset: 0,
+                    y: reducedMotion ? 0 : p.exitY,
+                    scale: reducedMotion ? 1 : p.exitScale,
+                    opacity: isMobile ? 1 : p.exitOpacity,
+                    transformStyle: 'preserve-3d',
+                    pointerEvents: 'none',
+                  }}
+                >
+                  <motion.div
+                    style={{
+                      ...boxD(slot.x, slot.y, slot.w, slot.h),
+                      zIndex: slot.zIndex,
+                      cursor: 'pointer',
+                      pointerEvents: 'auto',
+                      transformStyle: 'preserve-3d',
+                    }}
+                    animate={{
+                      left: uD(slot.x),
+                      top: uD(slot.y),
+                      width: uD(slot.w),
+                      height: uD(slot.h),
+                      rotate: slot.rotate,
+                      scale: slot.scale,
+                      zIndex: slot.zIndex,
+                    }}
+                    transition={{
+                      type: 'spring',
+                      stiffness: 70,
+                      damping: 14,
+                      mass: 0.8,
+                    }}
+                    whileHover={{ scale: slot.scale * 1.08, rotate: 0, rotateY: slot.rotate > 0 ? -15 : 15 }}
+                  >
+                    <img
+                      src={p.img}
+                      alt={p.alt}
+                      draggable={false}
+                      style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                    />
+                  </motion.div>
+                </motion.div>
+              );
+            });
+          })()}
         </div>
 
         {/* Terracotta Bowl */}
@@ -616,7 +590,7 @@ export default function HeroSection() {
           </div>
         </motion.div>
 
-        {/* ── Mobile 3D Pouches Centerpiece (Prominent Vertical Focus) ── */}
+        {/* ── Mobile 3D Pouches Centerpiece (Prominent Vertical Focus with 2s Place Shifting) ── */}
         <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
           {/* Radial ground shadows */}
           <div
@@ -627,67 +601,57 @@ export default function HeroSection() {
             }}
           />
 
-          {/* Left Peri Peri Pouch */}
-          <motion.div
-            style={{
-              ...boxM(25, 260, 140, 210),
-              zIndex: 10,
-              transform: 'rotate(-8deg)',
-              pointerEvents: 'auto',
-            }}
-            initial={reducedMotion ? {} : { opacity: 0, x: -35, y: 30 }}
-            whileInView={{ opacity: 1, x: 0, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ type: 'spring', stiffness: 75, damping: 14, delay: 0.15 }}
-          >
-            <img
-              src={pouchPeriPeri}
-              alt="Enjoyeat Peri Peri Makhana"
-              draggable={false}
-              style={{ width: '100%', height: '100%', objectFit: 'contain' }}
-            />
-          </motion.div>
+          {(() => {
+            // 3 Mobile slot coordinates: Left (0), Center (1), Right (2)
+            const mobileSlots = [
+              { x: 25,  y: 260, w: 140, h: 210, rotate: -8, zIndex: 10, scale: 0.94 },
+              { x: 155, y: 220, w: 170, h: 255, rotate: 0,  zIndex: 20, scale: 1.05 },
+              { x: 315, y: 260, w: 140, h: 210, rotate: 8,  zIndex: 10, scale: 0.94 },
+            ];
 
-          {/* Center Flagship Raw Makhana Pouch */}
-          <motion.div
-            style={{
-              ...boxM(155, 220, 170, 255),
-              zIndex: 20,
-              pointerEvents: 'auto',
-            }}
-            initial={reducedMotion ? {} : { opacity: 0, y: 35, scale: 0.9 }}
-            whileInView={{ opacity: 1, y: 0, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ type: 'spring', stiffness: 80, damping: 13, delay: 0.05 }}
-          >
-            <img
-              src={pouchRawMakhana}
-              alt="Enjoyeat Premium Raw Makhana"
-              draggable={false}
-              style={{ width: '100%', height: '100%', objectFit: 'contain' }}
-            />
-          </motion.div>
+            const pouches = [
+              { id: 'peri', img: pouchPeriPeri, alt: 'Enjoyeat Peri Peri Makhana' },
+              { id: 'raw',  img: pouchRawMakhana, alt: 'Enjoyeat Premium Raw Makhana' },
+              { id: 'tom',  img: pouchTangyTomato, alt: 'Enjoyeat Tangy Tomato Makhana' },
+            ];
 
-          {/* Right Tangy Tomato Pouch */}
-          <motion.div
-            style={{
-              ...boxM(315, 260, 140, 210),
-              zIndex: 10,
-              transform: 'rotate(8deg)',
-              pointerEvents: 'auto',
-            }}
-            initial={reducedMotion ? {} : { opacity: 0, x: 35, y: 30 }}
-            whileInView={{ opacity: 1, x: 0, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ type: 'spring', stiffness: 75, damping: 14, delay: 0.22 }}
-          >
-            <img
-              src={pouchTangyTomato}
-              alt="Enjoyeat Tangy Tomato Makhana"
-              draggable={false}
-              style={{ width: '100%', height: '100%', objectFit: 'contain' }}
-            />
-          </motion.div>
+            return pouches.map((p, idx) => {
+              const currentSlotIndex = (idx + shiftIndex) % 3;
+              const slot = mobileSlots[currentSlotIndex];
+
+              return (
+                <motion.div
+                  key={p.id}
+                  style={{
+                    position: 'absolute',
+                    pointerEvents: 'auto',
+                  }}
+                  animate={{
+                    left: uM(slot.x),
+                    top: uM(slot.y),
+                    width: uM(slot.w),
+                    height: uM(slot.h),
+                    rotate: slot.rotate,
+                    scale: slot.scale,
+                    zIndex: slot.zIndex,
+                  }}
+                  transition={{
+                    type: 'spring',
+                    stiffness: 75,
+                    damping: 14,
+                    mass: 0.85,
+                  }}
+                >
+                  <img
+                    src={p.img}
+                    alt={p.alt}
+                    draggable={false}
+                    style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                  />
+                </motion.div>
+              );
+            });
+          })()}
 
           {/* Terracotta Bowl with Makhana in Foreground */}
           <motion.div

@@ -3,13 +3,12 @@ import { motion } from "framer-motion";
 import { useReducedMotionSafe } from "../hooks/useReducedMotionSafe";
 
 /**
- * MobileAlternatingSection:
- * Creates an elegant, punchy alternating entry & shifting animation on mobile:
- * - When shifting from one section to another:
- *   - Direction 'right': pops up with dynamic slide from right (+48px)
- *   - Direction 'left': pops up with dynamic slide from left (-48px)
- * - Uses spring easing for natural physical settling (stiffness: 80, damping: 17)
- * - Low amount threshold (amount: 0.04) ensures it triggers reliably on mobile viewports
+ * MobileAlternatingSection (Page-Shift Transition Runtime):
+ * Creates a distinct, physical page-shift animation on both Desktop and Mobile:
+ * - Odd pages / direction 'right': sweeps into view with dynamic pop-in from the RIGHT side (+60px on desktop, +44px on mobile)
+ * - Even pages / direction 'left': sweeps into view with dynamic pop-in from the LEFT side (-60px on desktop, -44px on mobile)
+ * - Uses calibrated spring physics (stiffness: 85, damping: 18) for smooth settling without layout jumps
+ * - Triggers seamlessly both on initial scroll and while shifting between pages
  */
 export default function MobileAlternatingSection({
   children,
@@ -34,10 +33,10 @@ export default function MobileAlternatingSection({
   }, []);
 
   const isFromRight = direction === "right";
-  // On mobile, shifting offset is punchy (+48px / -48px); on desktop it stays clean (0px)
-  const initialX = isMobile ? (isFromRight ? 48 : -48) : 0;
-  const initialY = isMobile ? 24 : 0;
-  const initialScale = isMobile ? 0.96 : 1;
+  // Alternating entry: Right side (+60px / +44px) vs Left side (-60px / -44px)
+  const initialX = isFromRight ? (isMobile ? 44 : 64) : (isMobile ? -44 : -64);
+  const initialY = isMobile ? 18 : 28;
+  const initialScale = isMobile ? 0.96 : 0.98;
 
   return (
     <motion.div
@@ -47,7 +46,7 @@ export default function MobileAlternatingSection({
         reducedMotion
           ? {}
           : {
-              opacity: isMobile ? 0.2 : 1,
+              opacity: 0.15,
               x: initialX,
               y: initialY,
               scale: initialScale,
@@ -59,12 +58,12 @@ export default function MobileAlternatingSection({
         y: 0,
         scale: 1,
       }}
-      viewport={{ once: true, amount: 0.04 }}
+      viewport={{ once: false, amount: 0.08 }}
       transition={{
         type: "spring",
-        stiffness: 80,
-        damping: 17,
-        mass: 0.85,
+        stiffness: 85,
+        damping: 18,
+        mass: 0.9,
         restDelta: 0.001,
       }}
     >
