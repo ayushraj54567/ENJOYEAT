@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { useReducedMotionSafe } from "./hooks/useReducedMotionSafe";
 
-import leftPouch from "./assets/shop/left-pouch.png";
-import shopCenterScene from "./assets/shop/shop-center-scene.png";
+import leftPouch from "./assets/shop/jar-product.png";
+import shopCenterScene from "./assets/shop/shop-center-scene-new.png";
 import shopBulkSacks from "./assets/shop/shop-bulk-sacks.png";
 
 /* ── Desktop Canvas: 2576 x 1438 (Preserves exact 1:1 original desktop fidelity) ── */
@@ -59,24 +59,44 @@ export default function ChooseCrunchPage() {
   const [size, setSize] = useState("100g");
   const reducedMotion = useReducedMotionSafe();
 
-  // Desktop typewriter letter stagger variants
+  // Letter stagger variants for Left-to-Right typewriter typing effect
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.032,
-        delayChildren: 0.2,
+        staggerChildren: 0.035,
+        delayChildren: 0.15,
       },
     },
   };
 
   const letterVariants = {
-    hidden: { opacity: 0, y: 10 },
+    hidden: { opacity: 0, x: -12 },
     visible: {
       opacity: 1,
-      y: 0,
-      transition: { duration: 0.15, ease: "easeOut" },
+      x: 0,
+      transition: { duration: 0.22, ease: "easeOut" },
+    },
+  };
+
+  const subtitleContainerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.02,
+        delayChildren: 1.1,
+      },
+    },
+  };
+
+  const subtitleLetterVariants = {
+    hidden: { opacity: 0, x: -8 },
+    visible: {
+      opacity: 1,
+      x: 0,
+      transition: { duration: 0.18, ease: "easeOut" },
     },
   };
 
@@ -138,20 +158,33 @@ export default function ChooseCrunchPage() {
           <motion.p
             className="abs sub"
             style={{
-              ...posD(165, 335, 1100),
+              ...posD(165, 335, 1300),
               fontSize: fsD(40),
               lineHeight: `${fsD(54)}`,
               fontFamily: "Inter, sans-serif",
               fontWeight: 300,
               color: "#554236",
               margin: 0,
+              display: "flex",
+              flexWrap: "wrap",
             }}
-            initial={reducedMotion ? {} : { opacity: 0, y: 15 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            variants={subtitleContainerVariants}
+            initial="hidden"
+            whileInView="visible"
             viewport={{ once: true, amount: 0.2 }}
-            transition={{ duration: 0.8, delay: 0.75, ease: "easeOut" }}
           >
-            {SUBTITLE_TEXT}
+            {SUBTITLE_TEXT.split("").map((char, index) => (
+              <motion.span
+                key={index}
+                variants={subtitleLetterVariants}
+                style={{
+                  display: "inline-block",
+                  whiteSpace: char === " " ? "pre" : "normal",
+                }}
+              >
+                {char}
+              </motion.span>
+            ))}
           </motion.p>
         </div>
 
@@ -178,19 +211,12 @@ export default function ChooseCrunchPage() {
             className="abs fl drop-shadow-[0_20px_25px_rgba(0,0,0,0.25)]"
             style={posD(250, 630, 340)}
             src={leftPouch}
-            alt="EnjoyEat Peri Peri Makhana pouch"
+            alt="EnjoyEat Flavoured Makhana Jar"
             draggable={false}
           />
           <Fit x={180} y={1010} w={480} size={45} className="ttl">
-            PERI PERI MAKHANA
+            FLAVOURED MAKHANA
           </Fit>
-          <button
-            className="abs soon"
-            disabled
-            style={{ ...posD(250, 1085, 340, 80), fontSize: fsD(34) }}
-          >
-            COMING SOON
-          </button>
           <p
             className="abs szl"
             style={{ ...posD(250, 1180, 340), fontSize: fsD(32) }}
@@ -217,7 +243,7 @@ export default function ChooseCrunchPage() {
         >
           <img
             src={shopCenterScene}
-            alt="Enjoyeat Makhana Premium Raw"
+            alt="Enjoyeat Makhana (Foxnut) Raw"
             draggable={false}
             style={{
               width: "100%",
@@ -286,7 +312,7 @@ export default function ChooseCrunchPage() {
         className="stage shop-mobile-only"
         aria-label="Choose your natural crunch - Mobile"
       >
-        {/* Mobile Header: Title & Subtitle */}
+        {/* Mobile Header: Title & Subtitle with Left-to-Right Typewriter typing */}
         <motion.div
           style={{
             position: "absolute",
@@ -295,10 +321,10 @@ export default function ChooseCrunchPage() {
             right: uM(20),
             zIndex: 10,
           }}
-          initial={reducedMotion ? {} : { opacity: 0, y: 14 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.15 }}
         >
           <h2
             style={{
@@ -310,11 +336,24 @@ export default function ChooseCrunchPage() {
               margin: 0,
               color: "#3d2a1f",
               textTransform: "uppercase",
+              display: "flex",
+              flexWrap: "wrap",
             }}
           >
-            {HEADLINE_TEXT}
+            {HEADLINE_TEXT.split("").map((char, index) => (
+              <motion.span
+                key={index}
+                variants={letterVariants}
+                style={{
+                  display: "inline-block",
+                  whiteSpace: char === " " ? "pre" : "normal",
+                }}
+              >
+                {char}
+              </motion.span>
+            ))}
           </h2>
-          <p
+          <motion.p
             style={{
               fontFamily: "Inter, sans-serif",
               fontSize: uM(11.5),
@@ -322,10 +361,27 @@ export default function ChooseCrunchPage() {
               color: "#554236",
               margin: `${uM(4)} 0 0`,
               lineHeight: 1.4,
+              display: "flex",
+              flexWrap: "wrap",
             }}
+            variants={subtitleContainerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.15 }}
           >
-            {SUBTITLE_TEXT}
-          </p>
+            {SUBTITLE_TEXT.split("").map((char, index) => (
+              <motion.span
+                key={index}
+                variants={subtitleLetterVariants}
+                style={{
+                  display: "inline-block",
+                  whiteSpace: char === " " ? "pre" : "normal",
+                }}
+              >
+                {char}
+              </motion.span>
+            ))}
+          </motion.p>
         </motion.div>
 
         {/* ── 1. Flagship Centerpiece: Sattvik Makhana Hero Card (Top / Prominent) ── */}
@@ -389,7 +445,7 @@ export default function ChooseCrunchPage() {
               marginTop: uM(2),
             }}
           >
-            SATTVIK RAW MAKHANA
+            MAKHANA (FOXNUT)
           </span>
 
           {/* Size Selector Pills */}
@@ -415,9 +471,9 @@ export default function ChooseCrunchPage() {
                   fontFamily: "Inter, sans-serif",
                   border:
                     size === s
-                      ? "1.5px solid #4f6b52"
+                      ? "1.5px solid #25D366"
                       : "1.2px solid rgba(85,66,54,0.25)",
-                  background: size === s ? "#4f6b52" : "rgba(255,255,255,0.7)",
+                  background: size === s ? "#25D366" : "rgba(255,255,255,0.7)",
                   color: size === s ? "#ffffff" : "#3d2a1f",
                   cursor: "pointer",
                   pointerEvents: "auto",
@@ -430,27 +486,17 @@ export default function ChooseCrunchPage() {
             ))}
           </div>
 
-          {/* Order / Enquire CTA */}
+          {/* WhatsApp Direct Order CTA */}
           <a
-            href="#contact"
-            onClick={(e) => {
-              e.preventDefault();
-              const el =
-                document.getElementById("contact-mobile") ||
-                document.getElementById("contact-mobile-wrap") ||
-                document.getElementById("contact");
-              if (el) {
-                const navHeight = 72;
-                const pos = el.getBoundingClientRect().top + window.pageYOffset - navHeight;
-                window.scrollTo({ top: Math.max(0, pos), behavior: "smooth" });
-              }
-            }}
+            href={`https://wa.me/919876543210?text=Hello%20EnjoyEat,%20I%20would%20like%20to%20order%20Makhana%20(Foxnut)%20-%20${size}`}
+            target="_blank"
+            rel="noopener noreferrer"
             style={{
               marginTop: uM(10),
               width: "80%",
               maxWidth: uM(280),
               height: uM(36),
-              background: "#4f6b52",
+              background: "#25D366",
               color: "#ffffff",
               borderRadius: uM(8),
               display: "flex",
@@ -460,7 +506,7 @@ export default function ChooseCrunchPage() {
               fontWeight: 600,
               letterSpacing: "0.05em",
               textDecoration: "none",
-              boxShadow: "0 4px 12px rgba(79, 107, 82, 0.28)",
+              boxShadow: "0 4px 12px rgba(37, 211, 102, 0.32)",
               cursor: "pointer",
               pointerEvents: "auto",
               touchAction: "manipulation",
@@ -468,11 +514,11 @@ export default function ChooseCrunchPage() {
               zIndex: 15,
             }}
           >
-            BOOK NOW • {size}
+            ORDER ON WHATSAPP • {size}
           </a>
         </motion.div>
 
-        {/* ── 2. Left Product: Premium Raw Makhana (Horizontal Compact Card) ── */}
+        {/* ── 2. Left Product: Flavoured Makhana Jar ── */}
         <motion.div
           style={{
             ...boxM(20, 474, 440, 168),
@@ -510,7 +556,7 @@ export default function ChooseCrunchPage() {
           >
             <img
               src={leftPouch}
-              alt="Premium Raw Makhana Pouch"
+              alt="Flavoured Makhana Jar"
               draggable={false}
               style={{
                 width: "100%",
@@ -539,7 +585,7 @@ export default function ChooseCrunchPage() {
                 lineHeight: 1.2,
               }}
             >
-              PERI PERI MAKHANA
+              FLAVOURED MAKHANA
             </span>
             <span
               style={{
@@ -548,29 +594,32 @@ export default function ChooseCrunchPage() {
                 fontFamily: "Inter, sans-serif",
               }}
             >
-              Spicy | Bold | Flavorful • Net Wt 150g
+              Roasted &amp; Seasoned • Natural Crunch
             </span>
-            <button
-              disabled
+            <a
+              href="https://wa.me/919876543210?text=Hello%20EnjoyEat,%20I%20would%20like%20to%20order%20Flavoured%20Makhana%20(Foxnut)%20Jar"
+              target="_blank"
+              rel="noopener noreferrer"
               style={{
                 marginTop: uM(6),
-                width: uM(140),
+                width: uM(160),
                 height: uM(32),
-                background: "#665a53",
+                background: "#25D366",
                 color: "#ffffff",
                 border: 0,
                 borderRadius: uM(6),
                 fontSize: uM(10.5),
                 fontWeight: 600,
                 letterSpacing: "0.04em",
-                cursor: "not-allowed",
+                textDecoration: "none",
+                cursor: "pointer",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
               }}
             >
-              COMING SOON
-            </button>
+              ORDER ON WHATSAPP
+            </a>
           </div>
         </motion.div>
 
@@ -662,8 +711,14 @@ export default function ChooseCrunchPage() {
                   document.getElementById("wholesale");
                 if (el) {
                   const navHeight = 72;
-                  const pos = el.getBoundingClientRect().top + window.pageYOffset - navHeight;
-                  window.scrollTo({ top: Math.max(0, pos), behavior: "smooth" });
+                  const pos =
+                    el.getBoundingClientRect().top +
+                    window.pageYOffset -
+                    navHeight;
+                  window.scrollTo({
+                    top: Math.max(0, pos),
+                    behavior: "smooth",
+                  });
                 }
               }}
               style={{
@@ -696,7 +751,6 @@ export default function ChooseCrunchPage() {
 }
 
 const css = `
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@300;400;500;600&family=Inter+Tight:wght@500;600&display=swap');
 .pg {
   --ink: #3d2a1f;
   --gold: #b8914a;

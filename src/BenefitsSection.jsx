@@ -1,16 +1,14 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { useReducedMotionSafe } from './hooks/useReducedMotionSafe';
-import card1 from './assets/benefits/card_1_natural_clean.png';
-import card2 from './assets/benefits/card_2_protein_clean.png';
-import card3 from './assets/benefits/card_3_heart_clean.png';
-import card4 from './assets/benefits/card_4_diet_clean.png';
-import centerPouchStage from './assets/benefits/center_pouch_clean.png';
+import React, { useState, useRef } from "react";
+import { motion, useTransform, useSpring } from "framer-motion";
+import { useReducedMotionSafe } from "./hooks/useReducedMotionSafe";
+import { useOneWayScrollProgress } from "./hooks/useOneWayScrollProgress";
+import MakhanaGuideModal from "./components/MakhanaGuideModal";
+import realCenterImage from "./assets/benefits/real_benefits_center.png";
 
 /* Desktop Canvas: 1024 x 572 */
 const uD = (n) => `${((n / 1024) * 100).toFixed(4)}cqw`;
 const boxD = (x, y, w, h) => ({
-  position: 'absolute',
+  position: "absolute",
   left: uD(x),
   top: uD(y),
   ...(w != null && { width: uD(w) }),
@@ -20,7 +18,7 @@ const boxD = (x, y, w, h) => ({
 /* Mobile Canvas: 480 x 420 matching Video 2 mobile proportions */
 const uM = (n) => `${((n / 480) * 100).toFixed(4)}cqw`;
 const boxM = (x, y, w, h) => ({
-  position: 'absolute',
+  position: "absolute",
   left: uM(x),
   top: uM(y),
   ...(w != null && { width: uM(w) }),
@@ -28,9 +26,12 @@ const boxM = (x, y, w, h) => ({
 });
 
 const FONT_SERIF = "'Cormorant Garamond', 'Playfair Display', Georgia, serif";
-const FONT_SANS  = "'Plus Jakarta Sans', Inter, -apple-system, BlinkMacSystemFont, sans-serif";
+const FONT_SANS =
+  "'Plus Jakarta Sans', Inter, -apple-system, BlinkMacSystemFont, sans-serif";
 
 export default function BenefitsSection() {
+  const [activeGuide, setActiveGuide] = useState(null);
+  const sectionRef = useRef(null);
   const reducedMotion = useReducedMotionSafe();
 
   const easeTransition = {
@@ -38,17 +39,59 @@ export default function BenefitsSection() {
     ease: [0.16, 1, 0.3, 1],
   };
 
+  // Scroll-linked animation for Benefits Section
+  // Sticky scroll progress across 250vh - One-way progress (no reverse animation)
+  const scrollYProgress = useOneWayScrollProgress(sectionRef, {
+    offset: ["start start", "end end"],
+  });
+
+  const smoothProgress = useSpring(scrollYProgress, {
+    stiffness: 110,
+    damping: 22,
+    restDelta: 0.001,
+  });
+
+  // User requirement:
+  // "in the benefit page when I'm scrolling the jar was still come from the center but I want that it will come from the left side from the screen's left side and came to the right side and also one more thing when I was scrolling down it the jar was come to the right side but the screen the page will also goes to the upside but I don't want like this I want it works like when I'm scrolling only the jar will scroll from left side to right side Not my page will scroll to the upside ...
+  // after that when the jar was come to the right corner from the left corner when I am scrolling more then do not scroll my page just show the pop up and benefits were there and remove these benefits and add something other things"
+  // [0.0 -> 0.40]: Jar starts offscreen on the far left (-46cqw) and travels across screen smoothly to the far right corner (+28cqw)!
+  const centerImageX = useTransform(smoothProgress, [0.0, 0.40], ["-46cqw", "28cqw"]);
+  const centerImageScale = useTransform(smoothProgress, [0.0, 0.40], [0.88, 1.05]);
+
+  // [0.42 -> 0.85]: AFTER the jar stops on the right, the benefit cards pop up into the left & center areas!
+  const card1Scale = useTransform(smoothProgress, [0.42, 0.52], [0, 1]);
+  const card1Opacity = useTransform(smoothProgress, [0.42, 0.50], [0, 1]);
+
+  const card2Scale = useTransform(smoothProgress, [0.52, 0.62], [0, 1]);
+  const card2Opacity = useTransform(smoothProgress, [0.52, 0.60], [0, 1]);
+
+  const card3Scale = useTransform(smoothProgress, [0.62, 0.72], [0, 1]);
+  const card3Opacity = useTransform(smoothProgress, [0.62, 0.70], [0, 1]);
+
+  const card4Scale = useTransform(smoothProgress, [0.72, 0.82], [0, 1]);
+  const card4Opacity = useTransform(smoothProgress, [0.72, 0.80], [0, 1]);
+
   return (
-    <div className="bn-wrap">
+    <div className="bn-wrap" id="benefits" ref={sectionRef}>
       <style>{CSS}</style>
 
+      {/* Interactive Guide Modal */}
+      <MakhanaGuideModal
+        activeGuide={activeGuide}
+        onClose={() => setActiveGuide(null)}
+      />
+
       {/* ══════════════════════════════════════════════════════════════════
-          DESKTOP VIEW (width >= 769px): 1024 x 572 Wide Canvas
+          DESKTOP VIEW (width >= 769px): Sticky Pinning with Scroll Journey
       ══════════════════════════════════════════════════════════════════ */}
-      <section id="benefits" className="bn-stage bn-desktop-only" aria-label="The Goodness of Sattvik Makhana">
+      <div className="bn-sticky-container">
+        <section
+          className="bn-stage bn-desktop-only"
+          aria-label="The Goodness of Makhana (Foxnut)"
+        >
         {/* Section Header */}
         <motion.div
-          style={{ position: 'absolute', left: uD(54), top: uD(36), zIndex: 2 }}
+          style={{ position: "absolute", left: uD(54), top: uD(28), zIndex: 2 }}
           initial={reducedMotion ? {} : { opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.3 }}
@@ -59,165 +102,397 @@ export default function BenefitsSection() {
               fontFamily: FONT_SERIF,
               fontSize: uD(32),
               fontWeight: 700,
-              color: '#7A5C2E',
-              textTransform: 'uppercase',
-              letterSpacing: '0.04em',
+              color: "#7A5C2E",
+              textTransform: "uppercase",
+              letterSpacing: "0.04em",
               lineHeight: 1.15,
               margin: 0,
             }}
           >
-            THE GOODNESS OF SATTVIK MAKHANA
+            THE GOODNESS OF MAKHANA (FOXNUT)
           </h2>
           <p
             style={{
               fontFamily: FONT_SANS,
               fontSize: uD(13),
-              color: '#5C4A30',
+              color: "#5C4A30",
               margin: `${uD(6)} 0 0`,
               maxWidth: uD(540),
               lineHeight: 1.45,
             }}
           >
-            Every handful is packed with natural nutrition to support your active lifestyle.
+            Supports and promotes heart health, diabetes management, and natural
+            weight loss.
           </p>
+
+          {/* Guide Button */}
         </motion.div>
 
-        {/* ── High-Precision SVG Connector Lines with Terminal Dots ── */}
-        <motion.svg
-          viewBox="0 0 1024 572"
+        {/* CENTER REAL PRODUCT SHOWCASE: Moves from left to right as user scrolls and fixes at the right side */}
+        <motion.div
           style={{
-            position: 'absolute',
-            inset: 0,
-            width: '100%',
-            height: '100%',
-            pointerEvents: 'none',
-            zIndex: 1,
+            ...boxD(328, 128, 368, 332),
+            x: reducedMotion ? 0 : centerImageX,
+            scale: reducedMotion ? 1 : centerImageScale,
+            zIndex: 4,
+            transformOrigin: "center center",
           }}
-          initial={reducedMotion ? {} : { opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true, amount: 0.25 }}
-          transition={{ duration: 0.9, delay: 0.2, ease: 'easeOut' }}
-        >
-          {/* Connector 1: Top-Left Card -> Center Podium */}
-          <line x1="284" y1="212" x2="340" y2="212" stroke="#B8A07A" strokeWidth="1.6" strokeDasharray="4 3" />
-          <circle cx="340" cy="212" r="3.5" fill="#B8A07A" />
-
-          {/* Connector 2: Bottom-Left Card -> Center Podium */}
-          <line x1="284" y1="376" x2="340" y2="376" stroke="#B8A07A" strokeWidth="1.6" strokeDasharray="4 3" />
-          <circle cx="340" cy="376" r="3.5" fill="#B8A07A" />
-
-          {/* Connector 3: Top-Right Card -> Center Podium */}
-          <line x1="740" y1="212" x2="684" y2="212" stroke="#B8A07A" strokeWidth="1.6" strokeDasharray="4 3" />
-          <circle cx="684" cy="212" r="3.5" fill="#B8A07A" />
-
-          {/* Connector 4: Bottom-Right Card -> Center Podium */}
-          <line x1="740" y1="376" x2="684" y2="376" stroke="#B8A07A" strokeWidth="1.6" strokeDasharray="4 3" />
-          <circle cx="684" cy="376" r="3.5" fill="#B8A07A" />
-        </motion.svg>
-
-        {/* ── Center Stage: Left 2 Cards, Center Pouch, Right 2 Cards ── */}
-
-        {/* LEFT CARD 1: 100% Natural */}
-        <motion.div
-          style={{ ...boxD(54, 168, 230, 89), zIndex: 2 }}
-          initial={reducedMotion ? {} : { x: -30, opacity: 0 }}
-          whileInView={{ x: 0, opacity: 1 }}
-          viewport={{ once: true, amount: 0.25 }}
-          transition={{ ...easeTransition, delay: 0.1 }}
-          whileHover={reducedMotion ? {} : { scale: 1.03, y: -2, transition: { duration: 0.2 } }}
         >
           <img
-            src={card1}
-            alt="100% Natural"
-            draggable={false}
-            style={{ width: '100%', height: '100%', objectFit: 'contain', filter: 'drop-shadow(0 4px 12px rgba(60,40,20,0.08))' }}
-          />
-        </motion.div>
-
-        {/* LEFT CARD 2: Rich in Protein & Calcium */}
-        <motion.div
-          style={{ ...boxD(54, 332, 230, 89), zIndex: 2 }}
-          initial={reducedMotion ? {} : { x: -30, opacity: 0 }}
-          whileInView={{ x: 0, opacity: 1 }}
-          viewport={{ once: true, amount: 0.25 }}
-          transition={{ ...easeTransition, delay: 0.2 }}
-          whileHover={reducedMotion ? {} : { scale: 1.03, y: -2, transition: { duration: 0.2 } }}
-        >
-          <img
-            src={card2}
-            alt="Rich in Protein & Calcium"
-            draggable={false}
-            style={{ width: '100%', height: '100%', objectFit: 'contain', filter: 'drop-shadow(0 4px 12px rgba(60,40,20,0.08))' }}
-          />
-        </motion.div>
-
-        {/* CENTER POUCH ON WOOD SLICE */}
-        <motion.div
-          style={{ ...boxD(328, 128, 368, 332), zIndex: 3 }}
-          initial={reducedMotion ? {} : { scale: 0.94, opacity: 0, y: 20 }}
-          whileInView={{ scale: 1, opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.05 }}
-          transition={{ ...easeTransition, delay: 0.05 }}
-        >
-          <img
-            src={centerPouchStage}
-            alt="Enjoyeat Sattvik Makhana Gourmet Fox Nuts"
+            src={realCenterImage}
+            alt="Enjoyeat Makhana (Foxnut) Real Packaging"
             draggable={false}
             style={{
-              width: '100%',
-              height: '100%',
-              objectFit: 'contain',
-              mixBlendMode: 'multiply',
-              WebkitMaskImage: 'radial-gradient(closest-side, black 75%, transparent 100%)',
-              maskImage: 'radial-gradient(closest-side, black 75%, transparent 100%)',
+              width: "100%",
+              height: "100%",
+              objectFit: "contain",
+              filter: "drop-shadow(0 14px 28px rgba(50,35,15,0.14))",
             }}
           />
         </motion.div>
 
-        {/* RIGHT CARD 3: Heart & Digestion Friendly */}
+        {/* ── 4 Brand Promise / Goodness Cards: Pop up systematically across left & center area AFTER jar stops on the right ── */}
+
+        {/* BENEFIT CARD 1: GI-Tagged Mithila Origin */}
         <motion.div
-          style={{ ...boxD(740, 168, 230, 95), zIndex: 2 }}
-          initial={reducedMotion ? {} : { x: 30, opacity: 0 }}
-          whileInView={{ x: 0, opacity: 1 }}
-          viewport={{ once: true, amount: 0.25 }}
-          transition={{ ...easeTransition, delay: 0.15 }}
-          whileHover={reducedMotion ? {} : { scale: 1.03, y: -2, transition: { duration: 0.2 } }}
+          style={{
+            ...boxD(54, 150, 275, 92),
+            zIndex: 5,
+            background:
+              "linear-gradient(135deg, rgba(255,255,255,0.96) 0%, rgba(250,244,233,0.94) 100%)",
+            borderRadius: uD(16),
+            border: "1.2px solid rgba(195, 175, 145, 0.65)",
+            boxShadow: "0 10px 26px rgba(60,40,20,0.08)",
+            padding: `${uD(12)} ${uD(16)}`,
+            display: "flex",
+            alignItems: "center",
+            gap: uD(14),
+            boxSizing: "border-box",
+            scale: reducedMotion ? 1 : card1Scale,
+            opacity: reducedMotion ? 1 : card1Opacity,
+            transformOrigin: "center center",
+          }}
+          whileHover={
+            reducedMotion
+              ? {}
+              : { scale: 1.03, y: -2, transition: { duration: 0.2 } }
+          }
         >
-          <img
-            src={card3}
-            alt="Heart & Digestion Friendly"
-            draggable={false}
-            style={{ width: '100%', height: '100%', objectFit: 'contain', filter: 'drop-shadow(0 4px 12px rgba(60,40,20,0.08))' }}
-          />
+          <div
+            style={{
+              width: uD(46),
+              height: uD(46),
+              flexShrink: 0,
+              borderRadius: uD(12),
+              background: "linear-gradient(135deg, #EAF3E7 0%, #D8E7D4 100%)",
+              border: "1px solid #BDD5B6",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              boxShadow: "0 4px 10px rgba(67, 102, 60, 0.12)",
+            }}
+          >
+            <svg
+              width="60%"
+              height="60%"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#2E6930"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z" />
+              <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12" />
+            </svg>
+          </div>
+          <div style={{ display: "flex", flexDirection: "column" }}>
+            <span
+              style={{
+                fontFamily: FONT_SERIF,
+                fontSize: uD(15),
+                fontWeight: 700,
+                color: "#2C1E14",
+                lineHeight: 1.15,
+                letterSpacing: "0.01em",
+              }}
+            >
+              GI-Tagged Mithila Origin
+            </span>
+            <span
+              style={{
+                fontFamily: FONT_SANS,
+                fontSize: uD(10),
+                color: "#685646",
+                marginTop: uD(4),
+                lineHeight: 1.35,
+              }}
+            >
+              Certified authentic geographical heritage from Bihar ponds.
+            </span>
+          </div>
         </motion.div>
 
-        {/* RIGHT CARD 4: The Perfect Diet Partner */}
+        {/* BENEFIT CARD 2: Artisan Clay-Pot Roasting */}
         <motion.div
-          style={{ ...boxD(740, 332, 230, 93), zIndex: 2 }}
-          initial={reducedMotion ? {} : { x: 30, opacity: 0 }}
-          whileInView={{ x: 0, opacity: 1 }}
-          viewport={{ once: true, amount: 0.25 }}
-          transition={{ ...easeTransition, delay: 0.25 }}
-          whileHover={reducedMotion ? {} : { scale: 1.03, y: -2, transition: { duration: 0.2 } }}
+          style={{
+            ...boxD(54, 260, 275, 92),
+            zIndex: 5,
+            background:
+              "linear-gradient(135deg, rgba(255,255,255,0.96) 0%, rgba(250,244,233,0.94) 100%)",
+            borderRadius: uD(16),
+            border: "1.2px solid rgba(195, 175, 145, 0.65)",
+            boxShadow: "0 10px 26px rgba(60,40,20,0.08)",
+            padding: `${uD(12)} ${uD(16)}`,
+            display: "flex",
+            alignItems: "center",
+            gap: uD(14),
+            boxSizing: "border-box",
+            scale: reducedMotion ? 1 : card2Scale,
+            opacity: reducedMotion ? 1 : card2Opacity,
+            transformOrigin: "center center",
+          }}
+          whileHover={
+            reducedMotion
+              ? {}
+              : { scale: 1.03, y: -2, transition: { duration: 0.2 } }
+          }
         >
-          <img
-            src={card4}
-            alt="The Perfect Diet Partner"
-            draggable={false}
-            style={{ width: '100%', height: '100%', objectFit: 'contain', filter: 'drop-shadow(0 4px 12px rgba(60,40,20,0.08))' }}
-          />
+          <div
+            style={{
+              width: uD(46),
+              height: uD(46),
+              flexShrink: 0,
+              borderRadius: uD(12),
+              background: "linear-gradient(135deg, #FBF0E4 0%, #F4DEC6 100%)",
+              border: "1px solid #E4C8A3",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              boxShadow: "0 4px 10px rgba(166, 90, 24, 0.12)",
+            }}
+          >
+            <svg
+              width="60%"
+              height="60%"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#A85718"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z" />
+            </svg>
+          </div>
+          <div style={{ display: "flex", flexDirection: "column" }}>
+            <span
+              style={{
+                fontFamily: FONT_SERIF,
+                fontSize: uD(15),
+                fontWeight: 700,
+                color: "#2C1E14",
+                lineHeight: 1.15,
+                letterSpacing: "0.01em",
+              }}
+            >
+              Artisan Clay-Pot Roasting
+            </span>
+            <span
+              style={{
+                fontFamily: FONT_SANS,
+                fontSize: uD(10),
+                color: "#685646",
+                marginTop: uD(4),
+                lineHeight: 1.35,
+              }}
+            >
+              Hand-popped in iron woks preserving natural puff &amp; minerals.
+            </span>
+          </div>
+        </motion.div>
+
+        {/* BENEFIT CARD 3: Zero Palm Oil & Preservatives */}
+        <motion.div
+          style={{
+            ...boxD(348, 150, 275, 92),
+            zIndex: 5,
+            background:
+              "linear-gradient(135deg, rgba(255,255,255,0.96) 0%, rgba(250,244,233,0.94) 100%)",
+            borderRadius: uD(16),
+            border: "1.2px solid rgba(195, 175, 145, 0.65)",
+            boxShadow: "0 10px 26px rgba(60,40,20,0.08)",
+            padding: `${uD(12)} ${uD(16)}`,
+            display: "flex",
+            alignItems: "center",
+            gap: uD(14),
+            boxSizing: "border-box",
+            scale: reducedMotion ? 1 : card3Scale,
+            opacity: reducedMotion ? 1 : card3Opacity,
+            transformOrigin: "center center",
+          }}
+          whileHover={
+            reducedMotion
+              ? {}
+              : { scale: 1.03, y: -2, transition: { duration: 0.2 } }
+          }
+        >
+          <div
+            style={{
+              width: uD(46),
+              height: uD(46),
+              flexShrink: 0,
+              borderRadius: uD(12),
+              background: "linear-gradient(135deg, #FBECEE 0%, #F5D3D7 100%)",
+              border: "1px solid #EAB8BE",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              boxShadow: "0 4px 10px rgba(175, 45, 65, 0.12)",
+            }}
+          >
+            <svg
+              width="60%"
+              height="60%"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#B3263E"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+              <path d="m9 12 2 2 4-4" />
+            </svg>
+          </div>
+          <div style={{ display: "flex", flexDirection: "column" }}>
+            <span
+              style={{
+                fontFamily: FONT_SERIF,
+                fontSize: uD(15),
+                fontWeight: 700,
+                color: "#2C1E14",
+                lineHeight: 1.15,
+                letterSpacing: "0.01em",
+              }}
+            >
+              Zero Palm Oil &amp; Preservatives
+            </span>
+            <span
+              style={{
+                fontFamily: FONT_SANS,
+                fontSize: uD(10),
+                color: "#685646",
+                marginTop: uD(4),
+                lineHeight: 1.35,
+              }}
+            >
+              Clean label transparency with 100% natural seasonings only.
+            </span>
+          </div>
+        </motion.div>
+
+        {/* BENEFIT CARD 4: Freshness Shield Packaging */}
+        <motion.div
+          style={{
+            ...boxD(348, 260, 275, 92),
+            zIndex: 5,
+            background:
+              "linear-gradient(135deg, rgba(255,255,255,0.96) 0%, rgba(250,244,233,0.94) 100%)",
+            borderRadius: uD(16),
+            border: "1.2px solid rgba(195, 175, 145, 0.65)",
+            boxShadow: "0 10px 26px rgba(60,40,20,0.08)",
+            padding: `${uD(12)} ${uD(16)}`,
+            display: "flex",
+            alignItems: "center",
+            gap: uD(14),
+            boxSizing: "border-box",
+            scale: reducedMotion ? 1 : card4Scale,
+            opacity: reducedMotion ? 1 : card4Opacity,
+            transformOrigin: "center center",
+          }}
+          whileHover={
+            reducedMotion
+              ? {}
+              : { scale: 1.03, y: -2, transition: { duration: 0.2 } }
+          }
+        >
+          <div
+            style={{
+              width: uD(46),
+              height: uD(46),
+              flexShrink: 0,
+              borderRadius: uD(12),
+              background: "linear-gradient(135deg, #EEF5FC 0%, #D8E7F8 100%)",
+              border: "1px solid #B8D3F3",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              boxShadow: "0 4px 10px rgba(35, 95, 165, 0.12)",
+            }}
+          >
+            <svg
+              width="60%"
+              height="60%"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#1D5E9E"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+              <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
+              <line x1="12" y1="22.08" x2="12" y2="12" />
+            </svg>
+          </div>
+          <div style={{ display: "flex", flexDirection: "column" }}>
+            <span
+              style={{
+                fontFamily: FONT_SERIF,
+                fontSize: uD(15),
+                fontWeight: 700,
+                color: "#2C1E14",
+                lineHeight: 1.15,
+                letterSpacing: "0.01em",
+              }}
+            >
+              Freshness Shield Packaging
+            </span>
+            <span
+              style={{
+                fontFamily: FONT_SANS,
+                fontSize: uD(10),
+                color: "#685646",
+                marginTop: uD(4),
+                lineHeight: 1.35,
+              }}
+            >
+              Triple-layer nitrogen flush foil &amp; airtight seal for lasting crisp.
+            </span>
+          </div>
         </motion.div>
       </section>
-
+      </div>
 
       {/* ══════════════════════════════════════════════════════════════════
           MOBILE VIEW (width <= 768px): 480 x 420 Proportional Mobile Stage
           Matches Video 2 phone layout with generous vertical space & crisp text!
       ══════════════════════════════════════════════════════════════════ */}
-      <section id="benefits-mobile" className="bn-stage bn-mobile-only" aria-label="The Goodness of Sattvik Makhana">
+      <section
+        id="benefits-mobile"
+        className="bn-stage bn-mobile-only"
+        aria-label="The Goodness of Makhana (Foxnut)"
+      >
         {/* Mobile Section Header */}
         <motion.div
-          style={{ position: 'absolute', left: uM(18), top: uM(14), right: uM(18), zIndex: 2 }}
+          style={{
+            position: "absolute",
+            left: uM(18),
+            top: uM(14),
+            right: uM(18),
+            zIndex: 2,
+          }}
           initial={reducedMotion ? {} : { opacity: 0, y: 15 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.05 }}
@@ -226,175 +501,457 @@ export default function BenefitsSection() {
           <h2
             style={{
               fontFamily: FONT_SERIF,
-              fontSize: uM(22),
+              fontSize: uM(21),
               fontWeight: 700,
-              color: '#7A5C2E',
-              textTransform: 'uppercase',
-              letterSpacing: '0.03em',
+              color: "#7A5C2E",
+              textTransform: "uppercase",
+              letterSpacing: "0.03em",
               lineHeight: 1.15,
               margin: 0,
             }}
           >
-            THE GOODNESS OF SATTVIK MAKHANA
+            THE GOODNESS OF MAKHANA (FOXNUT)
           </h2>
           <p
             style={{
               fontFamily: FONT_SANS,
-              fontSize: uM(11.5),
-              color: '#5C4A30',
-              margin: `${uM(4)} 0 0`,
-              lineHeight: 1.4,
+              fontSize: uM(10.5),
+              color: "#5C4A30",
+              margin: `${uM(3)} 0 0`,
+              lineHeight: 1.35,
             }}
           >
-            Every handful is packed with natural nutrition to support your active lifestyle.
+            Supports &amp; promotes heart health, diabetes management, and
+            natural weight loss.
           </p>
+
+          {/* Mobile Guide Buttons - Removed Recipes Guide button since Recipes is now its own page */}
+          <div style={{ display: "flex", gap: uM(8), marginTop: uM(8) }}>
+            <button
+              type="button"
+              onClick={() => setActiveGuide("benefits")}
+              style={{
+                flex: 1,
+                padding: `${uM(6)} ${uM(8)}`,
+                borderRadius: uM(6),
+                background: "#747A55",
+                color: "#ffffff",
+                border: 0,
+                fontSize: uM(10),
+                fontWeight: 600,
+                cursor: "pointer",
+                textAlign: "center",
+                boxShadow: "0 2px 6px rgba(116,122,85,0.25)",
+              }}
+            >
+              📖 Makhana Health Benefits Guide
+            </button>
+          </div>
         </motion.div>
 
         {/* Mobile SVG Connector Lines with Terminal Dots */}
         <motion.svg
           viewBox="0 0 480 420"
           style={{
-            position: 'absolute',
+            position: "absolute",
             inset: 0,
-            width: '100%',
-            height: '100%',
-            pointerEvents: 'none',
+            width: "100%",
+            height: "100%",
+            pointerEvents: "none",
             zIndex: 1,
           }}
           initial={reducedMotion ? {} : { opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true, amount: 0.05 }}
-          transition={{ duration: 0.8, delay: 0.15, ease: 'easeOut' }}
+          transition={{ duration: 0.8, delay: 0.15, ease: "easeOut" }}
         >
           {/* Mobile Connector 1: Top-Left Card -> Center */}
-          <line x1="145" y1="130" x2="168" y2="130" stroke="#B8A07A" strokeWidth="1.4" strokeDasharray="3 2.5" />
+          <line
+            x1="145"
+            y1="130"
+            x2="168"
+            y2="130"
+            stroke="#B8A07A"
+            strokeWidth="1.4"
+            strokeDasharray="3 2.5"
+          />
           <circle cx="168" cy="130" r="2.8" fill="#B8A07A" />
 
           {/* Mobile Connector 2: Bottom-Left Card -> Center */}
-          <line x1="145" y1="240" x2="168" y2="240" stroke="#B8A07A" strokeWidth="1.4" strokeDasharray="3 2.5" />
+          <line
+            x1="145"
+            y1="240"
+            x2="168"
+            y2="240"
+            stroke="#B8A07A"
+            strokeWidth="1.4"
+            strokeDasharray="3 2.5"
+          />
           <circle cx="168" cy="240" r="2.8" fill="#B8A07A" />
 
           {/* Mobile Connector 3: Top-Right Card -> Center */}
-          <line x1="335" y1="130" x2="312" y2="130" stroke="#B8A07A" strokeWidth="1.4" strokeDasharray="3 2.5" />
+          <line
+            x1="335"
+            y1="130"
+            x2="312"
+            y2="130"
+            stroke="#B8A07A"
+            strokeWidth="1.4"
+            strokeDasharray="3 2.5"
+          />
           <circle cx="312" cy="130" r="2.8" fill="#B8A07A" />
 
           {/* Mobile Connector 4: Bottom-Right Card -> Center */}
-          <line x1="335" y1="240" x2="312" y2="240" stroke="#B8A07A" strokeWidth="1.4" strokeDasharray="3 2.5" />
+          <line
+            x1="335"
+            y1="240"
+            x2="312"
+            y2="240"
+            stroke="#B8A07A"
+            strokeWidth="1.4"
+            strokeDasharray="3 2.5"
+          />
           <circle cx="312" cy="240" r="2.8" fill="#B8A07A" />
         </motion.svg>
 
         {/* ── Mobile Center Stage: Left 2 Cards, Center Pouch, Right 2 Cards ── */}
 
-        {/* MOBILE LEFT CARD 1: 100% Natural */}
+        {/* MOBILE LEFT CARD 1: GI-Tagged Origin */}
         <motion.div
-          style={{ ...boxM(14, 102, 132, 58), zIndex: 2 }}
-          initial={reducedMotion ? {} : { x: -45, y: 15, opacity: 0, scale: 0.94 }}
-          whileInView={{ x: 0, y: 0, opacity: 1, scale: 1 }}
+          style={{
+            ...boxM(12, 102, 136, 68),
+            zIndex: 2,
+            background:
+              "linear-gradient(135deg, rgba(255,255,255,0.96) 0%, rgba(250,244,233,0.94) 100%)",
+            border: "1.2px solid rgba(195, 175, 145, 0.65)",
+            borderRadius: uM(12),
+            padding: `${uM(6)} ${uM(8)}`,
+            display: "flex",
+            alignItems: "center",
+            gap: uM(7),
+            boxShadow: "0 4px 12px rgba(60,40,20,0.06)",
+          }}
+          initial={reducedMotion ? {} : { x: -35, opacity: 0 }}
+          whileInView={{ x: 0, opacity: 1 }}
           viewport={{ once: true, amount: 0.05 }}
           transition={{
-            type: 'spring',
+            type: "spring",
             stiffness: 85,
             damping: 15,
             delay: 0.08,
           }}
         >
-          <img
-            src={card1}
-            alt="100% Natural"
-            draggable={false}
-            style={{ width: '100%', height: '100%', objectFit: 'contain', filter: 'drop-shadow(0 3px 8px rgba(60,40,20,0.08))' }}
-          />
+          <div
+            style={{
+              width: uM(28),
+              height: uM(28),
+              borderRadius: uM(8),
+              background: "linear-gradient(135deg, #EAF3E7 0%, #D8E7D4 100%)",
+              border: "1px solid #BDD5B6",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              flexShrink: 0,
+            }}
+          >
+            <svg
+              width="60%"
+              height="60%"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#2E6930"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z" />
+              <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12" />
+            </svg>
+          </div>
+          <div style={{ display: "flex", flexDirection: "column" }}>
+            <span
+              style={{
+                fontFamily: FONT_SERIF,
+                fontSize: uM(9.5),
+                fontWeight: 700,
+                color: "#2C1E14",
+                lineHeight: 1.15,
+              }}
+            >
+              GI-Tagged Origin
+            </span>
+            <span
+              style={{
+                fontFamily: FONT_SANS,
+                fontSize: uM(7),
+                color: "#685646",
+                marginTop: uM(2),
+                lineHeight: 1.25,
+              }}
+            >
+              Harvested from pristine Bihar wetlands.
+            </span>
+          </div>
         </motion.div>
 
-        {/* MOBILE LEFT CARD 2: Rich in Protein & Calcium */}
+        {/* MOBILE LEFT CARD 2: Artisan Clay Roasting */}
         <motion.div
-          style={{ ...boxM(14, 212, 132, 58), zIndex: 2 }}
-          initial={reducedMotion ? {} : { x: -45, y: 15, opacity: 0, scale: 0.94 }}
-          whileInView={{ x: 0, y: 0, opacity: 1, scale: 1 }}
+          style={{
+            ...boxM(12, 212, 136, 68),
+            zIndex: 2,
+            background:
+              "linear-gradient(135deg, rgba(255,255,255,0.96) 0%, rgba(250,244,233,0.94) 100%)",
+            border: "1.2px solid rgba(195, 175, 145, 0.65)",
+            borderRadius: uM(12),
+            padding: `${uM(6)} ${uM(8)}`,
+            display: "flex",
+            alignItems: "center",
+            gap: uM(7),
+            boxShadow: "0 4px 12px rgba(60,40,20,0.06)",
+          }}
+          initial={reducedMotion ? {} : { x: -35, opacity: 0 }}
+          whileInView={{ x: 0, opacity: 1 }}
           viewport={{ once: true, amount: 0.05 }}
           transition={{
-            type: 'spring',
+            type: "spring",
             stiffness: 85,
             damping: 15,
             delay: 0.18,
           }}
         >
-          <img
-            src={card2}
-            alt="Rich in Protein & Calcium"
-            draggable={false}
-            style={{ width: '100%', height: '100%', objectFit: 'contain', filter: 'drop-shadow(0 3px 8px rgba(60,40,20,0.08))' }}
-          />
+          <div
+            style={{
+              width: uM(28),
+              height: uM(28),
+              borderRadius: uM(8),
+              background: "linear-gradient(135deg, #FBF0E4 0%, #F4DEC6 100%)",
+              border: "1px solid #E4C8A3",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              flexShrink: 0,
+            }}
+          >
+            <svg
+              width="60%"
+              height="60%"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#A85718"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z" />
+            </svg>
+          </div>
+          <div style={{ display: "flex", flexDirection: "column" }}>
+            <span
+              style={{
+                fontFamily: FONT_SERIF,
+                fontSize: uM(9.5),
+                fontWeight: 700,
+                color: "#2C1E14",
+                lineHeight: 1.15,
+              }}
+            >
+              Clay-Pot Roasted
+            </span>
+            <span
+              style={{
+                fontFamily: FONT_SANS,
+                fontSize: uM(7),
+                color: "#685646",
+                marginTop: uM(2),
+                lineHeight: 1.25,
+              }}
+            >
+              Hand-popped preserving natural crunch.
+            </span>
+          </div>
         </motion.div>
 
-        {/* MOBILE CENTER POUCH ON WOOD SLICE */}
+        {/* MOBILE CENTER REAL PACKAGING PHOTO */}
         <motion.div
-          style={{ ...boxM(152, 85, 176, 215), zIndex: 3 }}
-          initial={reducedMotion ? {} : { scale: 0.88, opacity: 0, y: 24 }}
+          style={{ ...boxM(152, 95, 176, 195), zIndex: 3 }}
+          initial={reducedMotion ? {} : { scale: 0.88, opacity: 0, y: 20 }}
           whileInView={{ scale: 1, opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.05 }}
           transition={{
-            type: 'spring',
+            type: "spring",
             stiffness: 90,
             damping: 16,
             delay: 0.02,
           }}
         >
           <img
-            src={centerPouchStage}
-            alt="Enjoyeat Sattvik Makhana Gourmet Fox Nuts"
+            src={realCenterImage}
+            alt="EnjoyEat Foxnut Packaging"
             draggable={false}
             style={{
-              width: '100%',
-              height: '100%',
-              objectFit: 'contain',
-              mixBlendMode: 'multiply',
-              WebkitMaskImage: 'radial-gradient(closest-side, black 75%, transparent 100%)',
-              maskImage: 'radial-gradient(closest-side, black 75%, transparent 100%)',
+              width: "100%",
+              height: "100%",
+              objectFit: "contain",
+              filter: "drop-shadow(0 6px 14px rgba(45,30,15,0.18))",
             }}
           />
         </motion.div>
 
-        {/* MOBILE RIGHT CARD 3: Heart & Digestion Friendly */}
+        {/* MOBILE RIGHT CARD 3: Zero Palm Oil */}
         <motion.div
-          style={{ ...boxM(334, 102, 132, 60), zIndex: 2 }}
-          initial={reducedMotion ? {} : { x: 45, y: 15, opacity: 0, scale: 0.94 }}
-          whileInView={{ x: 0, y: 0, opacity: 1, scale: 1 }}
+          style={{
+            ...boxM(332, 102, 136, 68),
+            zIndex: 2,
+            background:
+              "linear-gradient(135deg, rgba(255,255,255,0.96) 0%, rgba(250,244,233,0.94) 100%)",
+            border: "1.2px solid rgba(195, 175, 145, 0.65)",
+            borderRadius: uM(12),
+            padding: `${uM(6)} ${uM(8)}`,
+            display: "flex",
+            alignItems: "center",
+            gap: uM(7),
+            boxShadow: "0 4px 12px rgba(60,40,20,0.06)",
+          }}
+          initial={reducedMotion ? {} : { x: 35, opacity: 0 }}
+          whileInView={{ x: 0, opacity: 1 }}
           viewport={{ once: true, amount: 0.05 }}
           transition={{
-            type: 'spring',
+            type: "spring",
             stiffness: 85,
             damping: 15,
             delay: 0.12,
           }}
         >
-          <img
-            src={card3}
-            alt="Heart & Digestion Friendly"
-            draggable={false}
-            style={{ width: '100%', height: '100%', objectFit: 'contain', filter: 'drop-shadow(0 3px 8px rgba(60,40,20,0.08))' }}
-          />
+          <div
+            style={{
+              width: uM(28),
+              height: uM(28),
+              borderRadius: uM(8),
+              background: "linear-gradient(135deg, #FBECEE 0%, #F5D3D7 100%)",
+              border: "1px solid #EAB8BE",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              flexShrink: 0,
+            }}
+          >
+            <svg
+              width="60%"
+              height="60%"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#B3263E"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+              <path d="m9 12 2 2 4-4" />
+            </svg>
+          </div>
+          <div style={{ display: "flex", flexDirection: "column" }}>
+            <span
+              style={{
+                fontFamily: FONT_SERIF,
+                fontSize: uM(9.5),
+                fontWeight: 700,
+                color: "#2C1E14",
+                lineHeight: 1.15,
+              }}
+            >
+              Zero Palm Oil
+            </span>
+            <span
+              style={{
+                fontFamily: FONT_SANS,
+                fontSize: uM(7),
+                color: "#685646",
+                marginTop: uM(2),
+                lineHeight: 1.25,
+              }}
+            >
+              100% clean-label natural ingredients.
+            </span>
+          </div>
         </motion.div>
 
-        {/* MOBILE RIGHT CARD 4: The Perfect Diet Partner */}
+        {/* MOBILE RIGHT CARD 4: Freshness Shield */}
         <motion.div
-          style={{ ...boxM(334, 212, 132, 59), zIndex: 2 }}
-          initial={reducedMotion ? {} : { x: 45, y: 15, opacity: 0, scale: 0.94 }}
-          whileInView={{ x: 0, y: 0, opacity: 1, scale: 1 }}
+          style={{
+            ...boxM(332, 212, 136, 68),
+            zIndex: 2,
+            background:
+              "linear-gradient(135deg, rgba(255,255,255,0.96) 0%, rgba(250,244,233,0.94) 100%)",
+            border: "1.2px solid rgba(195, 175, 145, 0.65)",
+            borderRadius: uM(12),
+            padding: `${uM(6)} ${uM(8)}`,
+            display: "flex",
+            alignItems: "center",
+            gap: uM(7),
+            boxShadow: "0 4px 12px rgba(60,40,20,0.06)",
+          }}
+          initial={reducedMotion ? {} : { x: 35, opacity: 0 }}
+          whileInView={{ x: 0, opacity: 1 }}
           viewport={{ once: true, amount: 0.05 }}
           transition={{
-            type: 'spring',
+            type: "spring",
             stiffness: 85,
             damping: 15,
             delay: 0.22,
           }}
         >
-          <img
-            src={card4}
-            alt="The Perfect Diet Partner"
-            draggable={false}
-            style={{ width: '100%', height: '100%', objectFit: 'contain', filter: 'drop-shadow(0 3px 8px rgba(60,40,20,0.08))' }}
-          />
+          <div
+            style={{
+              width: uM(28),
+              height: uM(28),
+              borderRadius: uM(8),
+              background: "linear-gradient(135deg, #EEF5FC 0%, #D8E7F8 100%)",
+              border: "1px solid #B8D3F3",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              flexShrink: 0,
+            }}
+          >
+            <svg
+              width="60%"
+              height="60%"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#1D5E9E"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+              <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
+              <line x1="12" y1="22.08" x2="12" y2="12" />
+            </svg>
+          </div>
+          <div style={{ display: "flex", flexDirection: "column" }}>
+            <span
+              style={{
+                fontFamily: FONT_SERIF,
+                fontSize: uM(9.5),
+                fontWeight: 700,
+                color: "#2C1E14",
+                lineHeight: 1.15,
+              }}
+            >
+              Freshness Shield
+            </span>
+            <span
+              style={{
+                fontFamily: FONT_SANS,
+                fontSize: uM(7),
+                color: "#685646",
+                marginTop: uM(2),
+                lineHeight: 1.25,
+              }}
+            >
+              Triple-layer sealed crisp protection.
+            </span>
+          </div>
         </motion.div>
       </section>
     </div>
@@ -405,8 +962,21 @@ const CSS = `
 .bn-wrap {
   width: 100%;
   background: #EFE7D6;
-  overflow: hidden;
   position: relative;
+}
+@media (min-width: 769px) {
+  .bn-wrap {
+    height: 250vh;
+  }
+  .bn-sticky-container {
+    position: sticky;
+    top: 72px;
+    height: calc(100vh - 72px);
+    width: 100%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+  }
 }
 .bn-stage {
   position: relative;

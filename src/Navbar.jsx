@@ -6,8 +6,14 @@ const NAV_ITEMS = [
   { name: "Our Story", href: "#our-story" },
   { name: "Shop", href: "#shop" },
   { name: "Benefits", href: "#benefits" },
+  { name: "Recipes", href: "#recipes" },
   { name: "Wholesale", href: "#wholesale" },
   { name: "Contact", href: "#contact" },
+  {
+    name: "Feedback",
+    href: "https://docs.google.com/forms/d/e/1FAIpQLSfDwIJ3TV9YvPCXabIl-r-574K2XGneAGjMILfbcKWv6oo6aw/viewform?utm_source=ig&utm_medium=social&utm_content=link_in_bio",
+    isExternal: true,
+  },
 ];
 
 const SECTION_IDS = [
@@ -15,6 +21,7 @@ const SECTION_IDS = [
   "our-story",
   "shop",
   "benefits",
+  "recipes",
   "wholesale",
   "contact",
 ];
@@ -50,10 +57,16 @@ export default function Navbar() {
   };
 
   /* ── Smooth scroll handler with robust cross-browser / mobile fallback ── */
-  const handleNav = (e, href) => {
+  const handleNav = (e, item) => {
+    if (item.isExternal) {
+      setMobileOpen(false);
+      return; // allow default anchor navigation to external link
+    }
+
     e.preventDefault();
     setMobileOpen(false);
 
+    const href = item.href;
     const id = href.replace("#", "");
     const isMobileViewport =
       typeof window !== "undefined" && window.innerWidth <= 768;
@@ -165,9 +178,9 @@ export default function Navbar() {
           style={{
             display: "flex",
             alignItems: "center",
-            gap: 32,
+            gap: 20,
             position: "absolute",
-            left: "64%",
+            left: "58%",
             transform: "translateX(-50%)",
           }}
           className="nav-desktop-links"
@@ -179,11 +192,13 @@ export default function Navbar() {
                 key={item.name}
                 href={item.href}
                 id={`nav-${item.name.toLowerCase().replace(/\s+/g, "-")}`}
-                onClick={(e) => handleNav(e, item.href)}
+                onClick={(e) => handleNav(e, item)}
+                target={item.isExternal ? "_blank" : undefined}
+                rel={item.isExternal ? "noopener noreferrer" : undefined}
                 style={{
-                  fontSize: 15,
-                  fontWeight: active ? 600 : 400,
-                  color: active ? "#2B261F" : "#3b2c20",
+                  fontSize: 13.5,
+                  fontWeight: active ? 600 : 500,
+                  color: active ? "#2B261F" : "#4A3B2C",
                   textDecoration: "none",
                   paddingBottom: 4,
                   borderBottom: active
@@ -198,7 +213,7 @@ export default function Navbar() {
                   if (!active) e.target.style.color = "#9E7B42";
                 }}
                 onMouseLeave={(e) => {
-                  if (!active) e.target.style.color = "#3b2c20";
+                  if (!active) e.target.style.color = "#4A3B2C";
                 }}
               >
                 {item.name}
@@ -219,12 +234,12 @@ export default function Navbar() {
           <a
             href="#shop"
             id="nav-shop-btn"
-            onClick={(e) => handleNav(e, "#shop")}
-            className="px-3 py-1.5 text-[11px] md:px-6 md:py-2.5 md:text-sm font-semibold rounded-md whitespace-nowrap cursor-pointer touch-manipulation"
+            onClick={(e) => handleNav(e, { name: "Shop", href: "#shop" })}
+            className="px-3.5 py-1.5 text-[11px] md:px-4 md:py-2 md:text-[11.5px] font-semibold rounded-md whitespace-nowrap cursor-pointer touch-manipulation"
             style={{
               background: "linear-gradient(135deg, #c9a55a, #8C6D3B)",
               color: "#fff",
-              letterSpacing: "0.07em",
+              letterSpacing: "0.06em",
               textTransform: "uppercase",
               textDecoration: "none",
               boxShadow: "0 3px 12px rgba(140,109,59,0.3)",
@@ -241,7 +256,7 @@ export default function Navbar() {
               e.target.style.transform = "none";
             }}
           >
-            ENQUIRE NOW
+            ORDER NOW
           </a>
 
           {/* Mobile hamburger */}
@@ -301,11 +316,23 @@ export default function Navbar() {
               overflow: "hidden",
             }}
           >
+            {/* WhatsApp Mobile Quick Button */}
+            <a
+              href="https://wa.me/919876543210?text=Hello%20EnjoyEat,%20I%20would%20like%20to%20order%20Makhana"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-center gap-2 py-2 px-4 rounded-lg font-semibold text-white text-xs uppercase tracking-wider mb-2"
+              style={{ background: "#25D366" }}
+            >
+              Chat / Order on WhatsApp
+            </a>
             {NAV_ITEMS.map((item) => (
               <a
                 key={item.name}
                 href={item.href}
-                onClick={(e) => handleNav(e, item.href)}
+                onClick={(e) => handleNav(e, item)}
+                target={item.isExternal ? "_blank" : undefined}
+                rel={item.isExternal ? "noopener noreferrer" : undefined}
                 className="cursor-pointer touch-manipulation"
                 style={{
                   fontSize: 16,

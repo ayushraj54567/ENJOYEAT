@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useReducedMotionSafe } from './hooks/useReducedMotionSafe';
+import PolicyModal from './components/PolicyModal';
 import biharMapClean from './assets/bihar-map-clean.jpg';
 import elM1 from './assets/hero/el_m1.png';
 import elM4 from './assets/hero/el_m4.png';
@@ -129,6 +130,9 @@ const YouTubeIcon = () => (
   </svg>
 );
 
+const INSTAGRAM_URL = "https://www.instagram.com/enjoyeat_makhana?xtok=MXczaTJlcDc3bnkyMQ%3D%3D&utm_source=qr";
+const SUGGESTION_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSfDwIJ3TV9YvPCXabIl-r-574K2XGneAGjMILfbcKWv6oo6aw/viewform?utm_source=ig&utm_medium=social&utm_content=link_in_bio";
+
 const CONTACT_ITEMS = [
   {
     label: 'Email',
@@ -143,6 +147,12 @@ const CONTACT_ITEMS = [
     icon: <PhoneIcon />,
   },
   {
+    label: 'Customer Suggestion & Feedback',
+    value: 'Share Your Suggestions & Feedback ✍️',
+    href: SUGGESTION_FORM_URL,
+    icon: <EnvelopeIcon />,
+  },
+  {
     label: 'Address',
     value: 'Sitamarhi, Bihar, India',
     href: null,
@@ -153,6 +163,7 @@ const CONTACT_ITEMS = [
 export default function ContactSection() {
   const reducedMotion = useReducedMotionSafe();
   const [formState, setFormState] = useState({ name: '', email: '', message: '' });
+  const [activePolicy, setActivePolicy] = useState(null);
 
   const handleFormChange = (e) =>
     setFormState((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -292,9 +303,9 @@ export default function ContactSection() {
                 boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.14)',
               }}
             >
-              <a href="#" aria-label="Instagram" style={{ width: uD(26), height: uD(26), display: 'flex', alignItems: 'center' }}><InstagramIcon /></a>
-              <a href="#" aria-label="Facebook" style={{ width: uD(26), height: uD(26), display: 'flex', alignItems: 'center' }}><FacebookIcon /></a>
-              <a href="#" aria-label="YouTube" style={{ width: uD(26), height: uD(26), display: 'flex', alignItems: 'center' }}><YouTubeIcon /></a>
+              <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" aria-label="Instagram" style={{ width: uD(26), height: uD(26), display: 'flex', alignItems: 'center' }}><InstagramIcon /></a>
+              <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" aria-label="Facebook" style={{ width: uD(26), height: uD(26), display: 'flex', alignItems: 'center' }}><FacebookIcon /></a>
+              <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" aria-label="YouTube" style={{ width: uD(26), height: uD(26), display: 'flex', alignItems: 'center' }}><YouTubeIcon /></a>
             </div>
           </div>
         </motion.div>
@@ -347,11 +358,29 @@ export default function ContactSection() {
           </span>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: uD(8) }}>
-            <a href="#" style={{ color: '#E2D7C2', fontSize: uD(10.5), textDecoration: 'none' }}>Privacy Policy</a>
+            <button
+              type="button"
+              onClick={() => setActivePolicy('privacy')}
+              style={{ background: 'none', border: 'none', color: '#E2D7C2', fontSize: uD(10.5), cursor: 'pointer', padding: 0 }}
+            >
+              Privacy Policy
+            </button>
             <span style={{ color: '#E2D7C2', opacity: 0.4, fontSize: uD(10) }}>|</span>
-            <a href="#" style={{ color: '#E2D7C2', fontSize: uD(10.5), textDecoration: 'none' }}>Terms &amp; Conditions</a>
+            <button
+              type="button"
+              onClick={() => setActivePolicy('terms')}
+              style={{ background: 'none', border: 'none', color: '#E2D7C2', fontSize: uD(10.5), cursor: 'pointer', padding: 0 }}
+            >
+              Terms &amp; Conditions
+            </button>
             <span style={{ color: '#E2D7C2', opacity: 0.4, fontSize: uD(10) }}>|</span>
-            <a href="#" style={{ color: '#E2D7C2', fontSize: uD(10.5), textDecoration: 'none' }}>Shipping &amp; Refund Policy</a>
+            <button
+              type="button"
+              onClick={() => setActivePolicy('shipping')}
+              style={{ background: 'none', border: 'none', color: '#E2D7C2', fontSize: uD(10.5), cursor: 'pointer', padding: 0 }}
+            >
+              Shipping &amp; Refund Policy
+            </button>
           </div>
         </footer>
       </section>
@@ -475,9 +504,9 @@ export default function ContactSection() {
                 boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.14)',
               }}
             >
-              <a href="#" aria-label="Instagram" style={{ width: uM(18), height: uM(18), display: 'flex', alignItems: 'center' }}><InstagramIcon /></a>
-              <a href="#" aria-label="Facebook" style={{ width: uM(18), height: uM(18), display: 'flex', alignItems: 'center' }}><FacebookIcon /></a>
-              <a href="#" aria-label="YouTube" style={{ width: uM(18), height: uM(18), display: 'flex', alignItems: 'center' }}><YouTubeIcon /></a>
+              <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" aria-label="Instagram" style={{ width: uM(18), height: uM(18), display: 'flex', alignItems: 'center' }}><InstagramIcon /></a>
+              <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" aria-label="Facebook" style={{ width: uM(18), height: uM(18), display: 'flex', alignItems: 'center' }}><FacebookIcon /></a>
+              <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" aria-label="YouTube" style={{ width: uM(18), height: uM(18), display: 'flex', alignItems: 'center' }}><YouTubeIcon /></a>
             </div>
           </div>
         </motion.div>
@@ -532,14 +561,35 @@ export default function ContactSection() {
             © {new Date().getFullYear()} EnjoyEat Makhana. All rights reserved.
           </div>
           <div style={{ display: 'flex', gap: uM(10), fontSize: uM(9), color: '#747A55' }}>
-            <a href="#" style={{ color: 'inherit', textDecoration: 'none' }}>Privacy Policy</a>
+            <button
+              type="button"
+              onClick={() => setActivePolicy('privacy')}
+              style={{ background: 'none', border: 'none', color: 'inherit', fontSize: 'inherit', cursor: 'pointer', padding: 0 }}
+            >
+              Privacy Policy
+            </button>
             <span>•</span>
-            <a href="#" style={{ color: 'inherit', textDecoration: 'none' }}>Terms</a>
+            <button
+              type="button"
+              onClick={() => setActivePolicy('terms')}
+              style={{ background: 'none', border: 'none', color: 'inherit', fontSize: 'inherit', cursor: 'pointer', padding: 0 }}
+            >
+              Terms
+            </button>
             <span>•</span>
-            <a href="#" style={{ color: 'inherit', textDecoration: 'none' }}>Shipping</a>
+            <button
+              type="button"
+              onClick={() => setActivePolicy('shipping')}
+              style={{ background: 'none', border: 'none', color: 'inherit', fontSize: 'inherit', cursor: 'pointer', padding: 0 }}
+            >
+              Shipping &amp; Refund
+            </button>
           </div>
         </div>
       </section>
+
+      {/* Pop-up Interactive Policy Modal */}
+      <PolicyModal activePolicy={activePolicy} onClose={() => setActivePolicy(null)} />
     </div>
   );
 }

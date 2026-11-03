@@ -22,7 +22,7 @@ body {
   color: #1E1E1C;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 /* ─── Typography Classes ─────────────────────────────────────────────────────── */

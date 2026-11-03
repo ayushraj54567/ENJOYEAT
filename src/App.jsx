@@ -5,6 +5,7 @@ import EnjoyeatStory from './EnjoyeatStory';
 import ChooseCrunchPage from './ChooseCrunchPage';
 import StoryToShopBurstWrapper from './components/StoryToShopBurstWrapper';
 import BenefitsSection from './BenefitsSection';
+import RecipesSection from './RecipesSection';
 import WholesaleSection from './WholesaleSection';
 import ContactSection from './ContactSection';
 import MobileAlternatingSection from './components/MobileAlternatingSection';
@@ -12,42 +13,32 @@ import './App.css';
 
 export default function App() {
   return (
-    <div className="w-full overflow-x-hidden min-h-screen bg-[#EFE7D6] text-[#1E1E1C] selection:bg-[#44533E] selection:text-white">
+    <div className="w-full min-h-screen bg-[#EFE7D6] text-[#1E1E1C] selection:bg-[#44533E] selection:text-white" style={{ overflow: "clip" }}>
       {/* Site-wide navigation bar */}
       <Navbar />
 
-      {/* Main Pages with Alternating Mobile Pop-Up Transitions */}
-      <main className="w-full overflow-x-hidden">
-        {/* Page 1: Hero (Natural Entry) */}
+      {/* Main Pages with Smooth Page-Shift Transitions */}
+      <main className="w-full" style={{ overflow: "clip" }}>
+        {/* Page 1: Hero */}
         <HeroSection />
 
-        {/* Transition Container: Page 2 (Story) + Page 3 (Shop) with Desktop Popcorn Burst */}
-        <StoryToShopBurstWrapper>
-          {/* Page 2: Our Story — Pops up from the RIGHT side on mobile */}
-          <MobileAlternatingSection direction="right" id="story-mobile-wrap">
-            <EnjoyeatStory />
-          </MobileAlternatingSection>
+        {/* Page 2: Our Story */}
+        <EnjoyeatStory />
 
-          {/* Page 3: Shop — Pops up from the LEFT side on mobile */}
-          <MobileAlternatingSection direction="left" id="shop-mobile-wrap">
-            <ChooseCrunchPage />
-          </MobileAlternatingSection>
-        </StoryToShopBurstWrapper>
+        {/* Page 3: Shop (ChooseCrunchPage) */}
+        <ChooseCrunchPage />
 
-        {/* Page 4: Benefits (Even #4) — Pops up from the LEFT side */}
-        <MobileAlternatingSection direction="left" id="benefits-mobile-wrap">
-          <BenefitsSection />
-        </MobileAlternatingSection>
+        {/* Page 4: Benefits */}
+        <BenefitsSection />
 
-        {/* Page 5: Wholesale (Odd #5) — Pops up from the RIGHT side */}
-        <MobileAlternatingSection direction="right" id="wholesale-mobile-wrap">
-          <WholesaleSection />
-        </MobileAlternatingSection>
+        {/* Page 5: Recipes & Use Cases */}
+        <RecipesSection />
 
-        {/* Page 6: Contact (Even #6) — Pops up from the LEFT side */}
-        <MobileAlternatingSection direction="left" id="contact-mobile-wrap">
-          <ContactSection />
-        </MobileAlternatingSection>
+        {/* Page 6: Wholesale */}
+        <WholesaleSection />
+
+        {/* Page 7: Contact */}
+        <ContactSection />
       </main>
     </div>
   );
