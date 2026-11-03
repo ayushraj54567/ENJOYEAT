@@ -297,9 +297,14 @@ export default function PolicyModal({ activePolicy, onClose }) {
 
           {/* Footer */}
           <div className="px-6 py-3.5 border-t border-[#E0D1B6] bg-[#F1E8D5] flex items-center justify-between shrink-0">
-            <span className="text-xs text-[#7A695A]">
-              EnjoyEat Food Private Limited • Sitamarhi, Bihar
-            </span>
+            <div className="flex flex-col">
+              <span className="text-xs font-semibold text-[#2A1E17]">
+                ENJOYEAT FOOD PRIVATE LIMITED • Sitamarhi, Bihar
+              </span>
+              <span className="text-[10px] text-[#7A695A]">
+                CIN: U10799BR2026PTC088365 | GSTIN: 10AAKCE0169K1ZS
+              </span>
+            </div>
             <button
               onClick={onClose}
               type="button"

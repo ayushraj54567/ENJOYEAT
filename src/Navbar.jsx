@@ -158,18 +158,18 @@ export default function Navbar() {
             >
               ENJOYEAT
             </div>
-            <divtyguh
+            <div
               style={{
-                fontSize: 11,
+                fontSize: 9.5,
                 fontWeight: 600,
-                letterSpacing: "0.18em",
+                letterSpacing: "0.12em",
                 color: "#A25F27",
                 textTransform: "uppercase",
                 marginTop: 1,
               }}
             >
-              MAKHANA
-            </divtyguh>
+              FOOD PVT. LTD.
+            </div>
           </div>
         </a>
 

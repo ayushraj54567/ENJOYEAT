@@ -165,9 +165,14 @@ export default function MakhanaGuideModal({ activeGuide, onClose }) {
 
           {/* Footer with company details and print/download */}
           <div className="px-6 py-3.5 border-t border-[#E0D1B6] bg-[#F1E8D5] flex items-center justify-between shrink-0">
-            <span className="text-xs text-[#7A695A]">
-              EnjoyEat Food Private Limited • info@enjoyeat.com
-            </span>
+            <div className="flex flex-col">
+              <span className="text-xs font-semibold text-[#2A1E17]">
+                ENJOYEAT FOOD PRIVATE LIMITED • Support.enjoyeat@gmail.com
+              </span>
+              <span className="text-[10px] text-[#7A695A]">
+                CIN: U10799BR2026PTC088365 | GSTIN: 10AAKCE0169K1ZS
+              </span>
+            </div>
             <div className="flex gap-2">
               <button
                 type="button"

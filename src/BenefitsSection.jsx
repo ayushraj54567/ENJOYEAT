@@ -5,6 +5,12 @@ import { useOneWayScrollProgress } from "./hooks/useOneWayScrollProgress";
 import MakhanaGuideModal from "./components/MakhanaGuideModal";
 import realCenterImage from "./assets/benefits/real_benefits_center.png";
 
+// Direct matching badge images from the brand image reference
+import badgeLeaf from "./assets/benefits/badge_leaf_clean.png";
+import badgeRoast from "./assets/benefits/badge_roast_clean.png";
+import badgeHeart from "./assets/benefits/badge_heart_clean.png";
+import badgeFreshness from "./assets/benefits/badge_freshness_clean.png";
+
 /* Desktop Canvas: 1024 x 572 */
 const uD = (n) => `${((n / 1024) * 100).toFixed(4)}cqw`;
 const boxD = (x, y, w, h) => ({
@@ -172,11 +178,6 @@ export default function BenefitsSection() {
             opacity: reducedMotion ? 1 : card1Opacity,
             transformOrigin: "center center",
           }}
-          whileHover={
-            reducedMotion
-              ? {}
-              : { scale: 1.03, y: -2, transition: { duration: 0.2 } }
-          }
         >
           <div
             style={{
@@ -184,27 +185,19 @@ export default function BenefitsSection() {
               height: uD(46),
               flexShrink: 0,
               borderRadius: uD(12),
-              background: "linear-gradient(135deg, #EAF3E7 0%, #D8E7D4 100%)",
-              border: "1px solid #BDD5B6",
+              overflow: "hidden",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
               boxShadow: "0 4px 10px rgba(67, 102, 60, 0.12)",
+              backgroundColor: "#FAF5ED",
             }}
           >
-            <svg
-              width="60%"
-              height="60%"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="#2E6930"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z" />
-              <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12" />
-            </svg>
+            <img
+              src={badgeLeaf}
+              alt="GI-Tagged Mithila Origin Seal"
+              style={{ width: "100%", height: "100%", objectFit: "contain" }}
+            />
           </div>
           <div style={{ display: "flex", flexDirection: "column" }}>
             <span
@@ -252,11 +245,6 @@ export default function BenefitsSection() {
             opacity: reducedMotion ? 1 : card2Opacity,
             transformOrigin: "center center",
           }}
-          whileHover={
-            reducedMotion
-              ? {}
-              : { scale: 1.03, y: -2, transition: { duration: 0.2 } }
-          }
         >
           <div
             style={{
@@ -264,26 +252,19 @@ export default function BenefitsSection() {
               height: uD(46),
               flexShrink: 0,
               borderRadius: uD(12),
-              background: "linear-gradient(135deg, #FBF0E4 0%, #F4DEC6 100%)",
-              border: "1px solid #E4C8A3",
+              overflow: "hidden",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
               boxShadow: "0 4px 10px rgba(166, 90, 24, 0.12)",
+              backgroundColor: "#FAF5ED",
             }}
           >
-            <svg
-              width="60%"
-              height="60%"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="#A85718"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z" />
-            </svg>
+            <img
+              src={badgeRoast}
+              alt="Artisan Clay-Pot Roasting Icon"
+              style={{ width: "100%", height: "100%", objectFit: "contain" }}
+            />
           </div>
           <div style={{ display: "flex", flexDirection: "column" }}>
             <span
@@ -307,7 +288,7 @@ export default function BenefitsSection() {
                 lineHeight: 1.35,
               }}
             >
-              Hand-popped in iron woks preserving natural puff &amp; minerals.
+              Hand-popped in iron woks preserving natural puff & minerals.
             </span>
           </div>
         </motion.div>
@@ -331,11 +312,6 @@ export default function BenefitsSection() {
             opacity: reducedMotion ? 1 : card3Opacity,
             transformOrigin: "center center",
           }}
-          whileHover={
-            reducedMotion
-              ? {}
-              : { scale: 1.03, y: -2, transition: { duration: 0.2 } }
-          }
         >
           <div
             style={{
@@ -343,27 +319,19 @@ export default function BenefitsSection() {
               height: uD(46),
               flexShrink: 0,
               borderRadius: uD(12),
-              background: "linear-gradient(135deg, #FBECEE 0%, #F5D3D7 100%)",
-              border: "1px solid #EAB8BE",
+              overflow: "hidden",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
               boxShadow: "0 4px 10px rgba(175, 45, 65, 0.12)",
+              backgroundColor: "#FAF5ED",
             }}
           >
-            <svg
-              width="60%"
-              height="60%"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="#B3263E"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-              <path d="m9 12 2 2 4-4" />
-            </svg>
+            <img
+              src={badgeHeart}
+              alt="Zero Palm Oil Clean Living Icon"
+              style={{ width: "100%", height: "100%", objectFit: "contain" }}
+            />
           </div>
           <div style={{ display: "flex", flexDirection: "column" }}>
             <span
@@ -376,7 +344,7 @@ export default function BenefitsSection() {
                 letterSpacing: "0.01em",
               }}
             >
-              Zero Palm Oil &amp; Preservatives
+              Zero Palm Oil & Preservatives
             </span>
             <span
               style={{
@@ -411,11 +379,6 @@ export default function BenefitsSection() {
             opacity: reducedMotion ? 1 : card4Opacity,
             transformOrigin: "center center",
           }}
-          whileHover={
-            reducedMotion
-              ? {}
-              : { scale: 1.03, y: -2, transition: { duration: 0.2 } }
-          }
         >
           <div
             style={{
@@ -423,28 +386,19 @@ export default function BenefitsSection() {
               height: uD(46),
               flexShrink: 0,
               borderRadius: uD(12),
-              background: "linear-gradient(135deg, #EEF5FC 0%, #D8E7F8 100%)",
-              border: "1px solid #B8D3F3",
+              overflow: "hidden",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
               boxShadow: "0 4px 10px rgba(35, 95, 165, 0.12)",
+              backgroundColor: "#FAF5ED",
             }}
           >
-            <svg
-              width="60%"
-              height="60%"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="#1D5E9E"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
-              <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
-              <line x1="12" y1="22.08" x2="12" y2="12" />
-            </svg>
+            <img
+              src={badgeFreshness}
+              alt="Freshness Shield Packaging Icon"
+              style={{ width: "100%", height: "100%", objectFit: "contain" }}
+            />
           </div>
           <div style={{ display: "flex", flexDirection: "column" }}>
             <span
@@ -468,7 +422,7 @@ export default function BenefitsSection() {
                 lineHeight: 1.35,
               }}
             >
-              Triple-layer nitrogen flush foil &amp; airtight seal for lasting crisp.
+              Triple-layer nitrogen flush foil & airtight seal for lasting crisp.
             </span>
           </div>
         </motion.div>
@@ -646,27 +600,19 @@ export default function BenefitsSection() {
               width: uM(28),
               height: uM(28),
               borderRadius: uM(8),
-              background: "linear-gradient(135deg, #EAF3E7 0%, #D8E7D4 100%)",
-              border: "1px solid #BDD5B6",
+              overflow: "hidden",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
               flexShrink: 0,
+              backgroundColor: "#FAF5ED",
             }}
           >
-            <svg
-              width="60%"
-              height="60%"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="#2E6930"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z" />
-              <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12" />
-            </svg>
+            <img
+              src={badgeLeaf}
+              alt="GI Origin"
+              style={{ width: "100%", height: "100%", objectFit: "contain" }}
+            />
           </div>
           <div style={{ display: "flex", flexDirection: "column" }}>
             <span
@@ -724,26 +670,19 @@ export default function BenefitsSection() {
               width: uM(28),
               height: uM(28),
               borderRadius: uM(8),
-              background: "linear-gradient(135deg, #FBF0E4 0%, #F4DEC6 100%)",
-              border: "1px solid #E4C8A3",
+              overflow: "hidden",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
               flexShrink: 0,
+              backgroundColor: "#FAF5ED",
             }}
           >
-            <svg
-              width="60%"
-              height="60%"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="#A85718"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z" />
-            </svg>
+            <img
+              src={badgeRoast}
+              alt="Clay Roasting"
+              style={{ width: "100%", height: "100%", objectFit: "contain" }}
+            />
           </div>
           <div style={{ display: "flex", flexDirection: "column" }}>
             <span
@@ -827,27 +766,19 @@ export default function BenefitsSection() {
               width: uM(28),
               height: uM(28),
               borderRadius: uM(8),
-              background: "linear-gradient(135deg, #FBECEE 0%, #F5D3D7 100%)",
-              border: "1px solid #EAB8BE",
+              overflow: "hidden",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
               flexShrink: 0,
+              backgroundColor: "#FAF5ED",
             }}
           >
-            <svg
-              width="60%"
-              height="60%"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="#B3263E"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-              <path d="m9 12 2 2 4-4" />
-            </svg>
+            <img
+              src={badgeHeart}
+              alt="Zero Palm Oil"
+              style={{ width: "100%", height: "100%", objectFit: "contain" }}
+            />
           </div>
           <div style={{ display: "flex", flexDirection: "column" }}>
             <span
@@ -905,28 +836,19 @@ export default function BenefitsSection() {
               width: uM(28),
               height: uM(28),
               borderRadius: uM(8),
-              background: "linear-gradient(135deg, #EEF5FC 0%, #D8E7F8 100%)",
-              border: "1px solid #B8D3F3",
+              overflow: "hidden",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
               flexShrink: 0,
+              backgroundColor: "#FAF5ED",
             }}
           >
-            <svg
-              width="60%"
-              height="60%"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="#1D5E9E"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
-              <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
-              <line x1="12" y1="22.08" x2="12" y2="12" />
-            </svg>
+            <img
+              src={badgeFreshness}
+              alt="Freshness Shield"
+              style={{ width: "100%", height: "100%", objectFit: "contain" }}
+            />
           </div>
           <div style={{ display: "flex", flexDirection: "column" }}>
             <span
