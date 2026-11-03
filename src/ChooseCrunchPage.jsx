@@ -34,7 +34,7 @@ function Fit({ x, y, w, size, children, className = "" }) {
   return (
     <svg
       className={`abs ${className}`}
-      style={posD(x, y, w, size * 1.3)}
+      style={{ ...posD(x, y, w, size * 1.3), pointerEvents: "none" }}
       viewBox={`0 0 ${w} ${size * 1.3}`}
       aria-label={children}
     >
@@ -203,13 +203,13 @@ export default function ChooseCrunchPage() {
           style={{
             position: "absolute",
             inset: 0,
-            pointerEvents: "auto",
-            zIndex: 5,
+            pointerEvents: "none",
+            zIndex: 20,
           }}
         >
           <img
             className="abs fl drop-shadow-[0_20px_25px_rgba(0,0,0,0.25)]"
-            style={posD(250, 630, 340)}
+            style={{ ...posD(250, 630, 340), pointerEvents: "auto" }}
             src={leftPouch}
             alt="EnjoyEat Flavoured Makhana Jar"
             draggable={false}
@@ -217,9 +217,31 @@ export default function ChooseCrunchPage() {
           <Fit x={180} y={1010} w={480} size={45} className="ttl">
             FLAVOURED MAKHANA
           </Fit>
+          <a
+            className="abs enq"
+            href="https://wa.me/919876543210?text=Hello%20EnjoyEat,%20I%20would%20like%20to%20order%20Flavoured%20Makhana%20(Foxnut)%20Jar"
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={(e) => {
+              e.stopPropagation();
+              window.open(
+                "https://wa.me/919876543210?text=Hello%20EnjoyEat,%20I%20would%20like%20to%20order%20Flavoured%20Makhana%20(Foxnut)%20Jar",
+                "_blank"
+              );
+            }}
+            style={{
+              ...posD(250, 1085, 340, 80),
+              fontSize: fsD(34),
+              zIndex: 99,
+              pointerEvents: "auto",
+              cursor: "pointer",
+            }}
+          >
+            ENQUIRE NOW
+          </a>
           <p
             className="abs szl"
-            style={{ ...posD(250, 1180, 340), fontSize: fsD(32) }}
+            style={{ ...posD(250, 1180, 340), fontSize: fsD(32), pointerEvents: "none" }}
           >
             {SIZES.join(" | ")}
           </p>
@@ -228,7 +250,7 @@ export default function ChooseCrunchPage() {
         {/* ── Centre Hero Centerpiece: One-Way Pop-Up Bounce ── */}
         <motion.div
           className="abs ctr"
-          style={{ ...posD(698, 460, 1180), zIndex: 10 }}
+          style={{ ...posD(698, 460, 1180), zIndex: 10, pointerEvents: "none" }}
           initial={reducedMotion ? {} : { opacity: 0, scale: 0.9, y: 35 }}
           whileInView={{ opacity: 1, scale: 1, y: 0 }}
           viewport={{ once: true, amount: 0.05 }}
@@ -273,8 +295,8 @@ export default function ChooseCrunchPage() {
           style={{
             position: "absolute",
             inset: 0,
-            pointerEvents: "auto",
-            zIndex: 5,
+            pointerEvents: "none",
+            zIndex: 20,
           }}
         >
           <img
@@ -286,6 +308,7 @@ export default function ChooseCrunchPage() {
                 "radial-gradient(closest-side, black 75%, transparent 100%)",
               maskImage:
                 "radial-gradient(closest-side, black 75%, transparent 100%)",
+              pointerEvents: "auto",
             }}
             src={shopBulkSacks}
             alt="Bulk makhana pouches and jute sacks"
@@ -297,7 +320,22 @@ export default function ChooseCrunchPage() {
           <a
             className="abs enq"
             href="#wholesale"
-            style={{ ...posD(1960, 1085, 340, 80), fontSize: fsD(34) }}
+            onClick={(e) => {
+              e.stopPropagation();
+              const el = document.getElementById("wholesale");
+              if (el) {
+                const navHeight = 72;
+                const pos = el.getBoundingClientRect().top + window.pageYOffset - navHeight;
+                window.scrollTo({ top: Math.max(0, pos), behavior: "smooth" });
+              }
+            }}
+            style={{
+              ...posD(1960, 1085, 340, 80),
+              fontSize: fsD(34),
+              zIndex: 99,
+              pointerEvents: "auto",
+              cursor: "pointer",
+            }}
           >
             ENQUIRE NOW
           </a>
@@ -600,11 +638,18 @@ export default function ChooseCrunchPage() {
               href="https://wa.me/919876543210?text=Hello%20EnjoyEat,%20I%20would%20like%20to%20order%20Flavoured%20Makhana%20(Foxnut)%20Jar"
               target="_blank"
               rel="noopener noreferrer"
+              onClick={(e) => {
+                e.stopPropagation();
+                window.open(
+                  "https://wa.me/919876543210?text=Hello%20EnjoyEat,%20I%20would%20like%20to%20order%20Flavoured%20Makhana%20(Foxnut)%20Jar",
+                  "_blank"
+                );
+              }}
               style={{
                 marginTop: uM(6),
-                width: uM(160),
+                width: uM(140),
                 height: uM(32),
-                background: "#25D366",
+                background: "#7e8458",
                 color: "#ffffff",
                 border: 0,
                 borderRadius: uM(6),
@@ -616,9 +661,14 @@ export default function ChooseCrunchPage() {
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
+                boxShadow: "0 3px 8px rgba(126, 132, 88, 0.28)",
+                pointerEvents: "auto",
+                touchAction: "manipulation",
+                position: "relative",
+                zIndex: 25,
               }}
             >
-              ORDER ON WHATSAPP
+              ORDER NOW
             </a>
           </div>
         </motion.div>
@@ -741,7 +791,7 @@ export default function ChooseCrunchPage() {
                 touchAction: "manipulation",
               }}
             >
-              ENQUIRE NOW
+              ORDER NOW
             </a>
           </div>
         </motion.div>

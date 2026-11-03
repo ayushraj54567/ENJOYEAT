@@ -357,6 +357,7 @@ export default function HeroSection() {
           <div
             style={{
               position: "absolute",
+              marginTop: 25,
               inset: 0,
               transformStyle: "preserve-3d",
               pointerEvents: "none",
