@@ -3,7 +3,7 @@ import { motion, useTransform, useSpring } from 'framer-motion';
 import { useReducedMotionSafe } from './hooks/useReducedMotionSafe';
 import { useOneWayScrollProgress } from './hooks/useOneWayScrollProgress';
 import roastImg from './assets/recipes/crispy_roast.jpg';
-import kheerImg from './assets/recipes/makhana_kheer.jpg';
+import kheerImg from './assets/recipes/Makhana_kheer.jpg';
 import masalaImg from './assets/recipes/masala_crunch.jpg';
 
 /* Desktop Canvas: 1024 x 572 */
@@ -439,4 +439,3 @@ const CSS = `
   }
 }
 `;
-
