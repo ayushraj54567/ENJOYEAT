@@ -269,7 +269,8 @@ const CONTACT_ITEMS = [
   {
     label: "Address",
     value: "Sitamarhi, Bihar, India",
-    href: null,
+    subtext: "📍 Open in Google Maps",
+    href: "https://maps.google.com/?q=Sitamarhi,+Bihar,+India",
     icon: <LocationPinIcon />,
   },
 ];
@@ -547,16 +548,37 @@ export default function ContactSection() {
                   height: uD(26),
                   display: "flex",
                   alignItems: "center",
-                  marginLeft: -45,
                 }}
-              />
+              >
+                <FacebookIcon />
+              </a>
+              <a
+                href={INSTAGRAM_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="YouTube"
+                style={{
+                  width: uD(26),
+                  height: uD(26),
+                  display: "flex",
+                  alignItems: "center",
+                }}
+              >
+                <YouTubeIcon />
+              </a>
             </div>
           </div>
         </motion.div>
 
-        {/* ── Desktop 3D Bihar Map ── */}
+        {/* ── Desktop Map & Google Maps Location ── */}
         <motion.div
-          style={{ ...boxD(460, 60, 520, 430), zIndex: 1 }}
+          style={{
+            ...boxD(460, 80, 510, 420),
+            zIndex: 1,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
           initial={
             reducedMotion ? {} : { opacity: 0, x: 45, y: 15, scale: 0.94 }
           }
@@ -569,23 +591,31 @@ export default function ContactSection() {
             delay: 0.15,
           }}
         >
-          <img
-            src={biharMapClean}
-            alt="3D map of Bihar"
-            className="ct-map-graphic"
-            draggable={false}
+          <div
             style={{
               width: "100%",
-              height: "100%",
-              objectFit: "contain",
-              userSelect: "none",
-              mixBlendMode: "multiply",
-              WebkitMaskImage:
-                "radial-gradient(closest-side, black 75%, transparent 100%)",
-              maskImage:
-                "radial-gradient(closest-side, black 75%, transparent 100%)",
+              height: uD(340),
+              borderRadius: uD(16),
+              overflow: "hidden",
+              boxShadow: "0 12px 30px rgba(50, 35, 15, 0.12)",
+              border: "1.5px solid rgba(255, 255, 255, 0.9)",
+              position: "relative",
+              background: "#EFE6D5",
             }}
-          />
+          >
+            <iframe
+              title="Google Map Location - ENJOYEAT Sitamarhi Bihar"
+              src="https://maps.google.com/maps?q=Sitamarhi,+Bihar,+India&t=&z=11&ie=UTF8&iwloc=&output=embed"
+              style={{
+                width: "100%",
+                height: "100%",
+                border: 0,
+                filter: "contrast(1.02) saturate(0.95)",
+              }}
+              loading="lazy"
+              allowFullScreen
+            />
+          </div>
         </motion.div>
 
         {/* ── Footer Bar ── */}
@@ -856,9 +886,15 @@ export default function ContactSection() {
           </div>
         </motion.div>
 
-        {/* ── MOBILE MAP: 3D Bihar Map (Placed in the right slot, replacing the form) ── */}
+        {/* ── MOBILE MAP: Google Maps Interactive Location ── */}
         <motion.div
-          style={{ ...boxM(248, 88, 222, 275), zIndex: 2 }}
+          style={{
+            ...boxM(248, 88, 222, 275),
+            zIndex: 2,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
           initial={
             reducedMotion ? {} : { opacity: 0, x: 45, y: 20, scale: 0.93 }
           }
@@ -871,23 +907,53 @@ export default function ContactSection() {
             delay: 0.16,
           }}
         >
-          <img
-            src={biharMapClean}
-            alt="3D map of Bihar"
-            className="ct-map-graphic"
-            draggable={false}
+          <div
             style={{
               width: "100%",
-              height: "100%",
-              objectFit: "contain",
-              userSelect: "none",
-              mixBlendMode: "multiply",
-              WebkitMaskImage:
-                "radial-gradient(closest-side, black 78%, transparent 100%)",
-              maskImage:
-                "radial-gradient(closest-side, black 78%, transparent 100%)",
+              height: uM(225),
+              borderRadius: uM(12),
+              overflow: "hidden",
+              boxShadow: "0 4px 14px rgba(50, 35, 15, 0.14)",
+              border: "1.2px solid rgba(255, 255, 255, 0.9)",
+              position: "relative",
+              background: "#EFE6D5",
             }}
-          />
+          >
+            <iframe
+              title="Google Map Location - ENJOYEAT Mobile"
+              src="https://maps.google.com/maps?q=Sitamarhi,+Bihar,+India&t=&z=11&ie=UTF8&iwloc=&output=embed"
+              style={{
+                width: "100%",
+                height: "100%",
+                border: 0,
+                filter: "contrast(1.02) saturate(0.95)",
+              }}
+              loading="lazy"
+              allowFullScreen
+            />
+          </div>
+
+          <a
+            href="https://maps.google.com/?q=Sitamarhi,+Bihar,+India"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              marginTop: uM(8),
+              display: "inline-flex",
+              alignItems: "center",
+              gap: uM(4),
+              padding: `${uM(4)} ${uM(10)}`,
+              borderRadius: uM(14),
+              background: "#7e8458",
+              color: "#ffffff",
+              fontSize: uM(9),
+              fontWeight: 600,
+              textDecoration: "none",
+              boxShadow: "0 2px 6px rgba(126, 132, 88, 0.28)",
+            }}
+          >
+            <span>📍</span> Google Maps
+          </a>
         </motion.div>
 
         {/* Mobile Footer */}
