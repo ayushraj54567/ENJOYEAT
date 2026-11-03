@@ -63,24 +63,20 @@ export default function Navbar() {
       return; // allow default anchor navigation to external link
     }
 
-    e.preventDefault();
+    if (e && e.preventDefault) {
+      e.preventDefault();
+    }
     setMobileOpen(false);
 
-    const href = item.href;
+    const href = typeof item === "string" ? item : item.href;
     const id = href.replace("#", "");
-    const isMobileViewport =
-      typeof window !== "undefined" && window.innerWidth <= 768;
 
-    // Prefer the mobile section/wrapper on mobile, and the desktop section on desktop
-    const target = isMobileViewport
-      ? document.getElementById(`${id}-mobile-wrap`) ||
-        document.getElementById(`${id}-mobile`) ||
-        document.getElementById(id) ||
-        document.querySelector(href)
-      : document.getElementById(id) ||
-        document.getElementById(`${id}-mobile-wrap`) ||
-        document.getElementById(`${id}-mobile`) ||
-        document.querySelector(href);
+    // Find the target element (mobile-specific or common wrapper/section)
+    const target =
+      document.getElementById(`${id}-mobile`) ||
+      document.getElementById(`${id}-mobile-wrap`) ||
+      document.getElementById(id) ||
+      document.querySelector(href);
 
     if (target) {
       const navHeight = 72;
@@ -318,7 +314,7 @@ export default function Navbar() {
           >
             {/* WhatsApp Mobile Quick Button */}
             <a
-              href="https://wa.me/919876543210?text=Hello%20EnjoyEat,%20I%20would%20like%20to%20order%20Makhana"
+              href="https://wa.me/8084044728?text=Hello%20EnjoyEat,%20I%20would%20like%20to%20order%20Makhana"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center justify-center gap-2 py-2 px-4 rounded-lg font-semibold text-white text-xs uppercase tracking-wider mb-2"
