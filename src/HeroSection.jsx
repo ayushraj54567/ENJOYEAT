@@ -49,15 +49,15 @@ const CSS = `
   background: #EFE7D6;
   overflow: hidden;
   padding-top: 72px;
-  min-height: 100svh;
+  min-height: auto;
   display: flex;
   align-items: center;
 }
 @media (max-width: 768px) {
   .ee-wrap {
     min-height: auto;
-    padding-top: 64px;
-    padding-bottom: 24px;
+    padding-top: 60px;
+    padding-bottom: 10px;
     display: block;
   }
 }
@@ -92,7 +92,7 @@ const CSS = `
 @media (min-width: 769px) {
   .ee-desktop-only {
     display: block;
-    aspect-ratio: 1024 / 620;
+    aspect-ratio: 1024 / 560;
     container-type: inline-size;
     overflow: hidden;
   }
@@ -106,10 +106,23 @@ const CSS = `
   }
   .ee-mobile-only {
     display: block;
-    aspect-ratio: 480 / 720;
+    aspect-ratio: 480 / 530;
     container-type: inline-size;
     overflow: hidden;
   }
+}
+
+/* Seamless packaging video blend mask:
+   Keeps 100% full opacity and maximum ultra-HD sharpness on the product jars in the center,
+   while smoothly dissolving the bottom baseline (with organic shadow) and outer perimeter edges into #EFE7D6. */
+.ee-packages-video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: contrast(1.02) saturate(1.02);
+  image-rendering: -webkit-optimize-contrast;
+  -webkit-mask-image: radial-gradient(ellipse 90% 78% at 50% 46%, black 50%, rgba(0,0,0,0.85) 68%, transparent 94%);
+  mask-image: radial-gradient(ellipse 90% 78% at 50% 46%, black 50%, rgba(0,0,0,0.85) 68%, transparent 94%);
 }
 
 /* Continuous scrolling ticker animation */
@@ -208,14 +221,27 @@ const TICKER_ITEMS = [
 
 export default function HeroSection() {
   const sectionRef = useRef(null);
+  const videoDesktopRef = useRef(null);
+  const videoMobileRef = useRef(null);
   const [shiftIndex, setShiftIndex] = useState(0);
   const reducedMotion = useReducedMotionSafe();
 
-  /* Cycle the 3 packages positions every 2 seconds */
+  /* Continuous non-stop video playback watchdog */
   useEffect(() => {
-    const timer = setInterval(() => {
-      setShiftIndex((prev) => (prev + 1) % 3);
-    }, 2000);
+    const playVideos = () => {
+      [videoDesktopRef.current, videoMobileRef.current].forEach((vid) => {
+        if (vid) {
+          vid.muted = true;
+          vid.playsInline = true;
+          if (vid.paused) {
+            vid.play().catch(() => {});
+          }
+        }
+      });
+    };
+
+    playVideos();
+    const timer = setInterval(playVideos, 2000);
     return () => clearInterval(timer);
   }, []);
 
@@ -241,7 +267,10 @@ export default function HeroSection() {
           }}
         >
           {Object.keys(DECO)
-            .filter((id) => id !== "bowl" && id !== "m11" && id !== "map")
+            .filter(
+              (id) =>
+                id !== "bigL" && id !== "bowl" && id !== "m11" && id !== "map",
+            )
             .map((id) => (
               <DecoD key={id} id={id} />
             ))}
@@ -271,106 +300,53 @@ export default function HeroSection() {
           ))}
         </div>
 
-        {/* ── 3D Center Packaging Trio: Shifting Carousel (Every 2s) with 3D Depth ── */}
+        {/* ── Center Packaging Video: Directly replacing the packages centerpiece ── */}
         <div
           style={{
             position: "absolute",
-            inset: 0,
-            perspective: "1200px",
-            transformStyle: "preserve-3d",
+            left: "50%",
+            top: uD(235),
+            transform: "translateX(-50%)",
+            width: uD(1300),
+            height: uD(285),
+            zIndex: 25,
             pointerEvents: "auto",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
           }}
         >
-          {/* Ground shadow under packages */}
+          {/* Deep organic ground contact shadow beneath the jars */}
           <div
             style={{
-              ...boxD(300, 480, 424, 26),
+              position: "absolute",
+              bottom: uD(10),
+              width: "74%",
+              height: uD(28),
               background:
-                "radial-gradient(ellipse, rgba(70,55,30,.32), transparent 70%)",
-              zIndex: 5,
+                "radial-gradient(ellipse at 50% 50%, rgba(55,40,25,.36) 0%, rgba(65,48,30,.22) 45%, transparent 75%)",
+              zIndex: 1,
+              pointerEvents: "none",
+              filter: "blur(4px)",
             }}
           />
 
-          {(() => {
-            // 3 Desktop spot presets: Left (0), Center (1), Right (2) - Adjusted downward to create breathing room from CTA buttons
-            const desktopSlots = [
-              { x: 300, y: 300, w: 142, h: 215, rotate: -7, zIndex: 10, scale: 1.02 },
-              { x: 426, y: 262, w: 172, h: 252, rotate: 0,  zIndex: 20, scale: 1.12 },
-              { x: 582, y: 300, w: 142, h: 215, rotate: 7,  zIndex: 10, scale: 1.02 },
-            ];
-
-            const products = [
-              {
-                id: "jar-peri",
-                img: jarPeriPeri,
-                alt: "Enjoyeat Peri Peri Flavoured Makhana Jar",
-                isPouch: false,
-              },
-              {
-                id: "pouch-peri",
-                img: pouchPeriPeri,
-                alt: "Enjoyeat Peri Peri Makhana Pouch",
-                isPouch: true,
-              },
-              {
-                id: "jar-tomato",
-                img: jarTangyTomato,
-                alt: "Enjoyeat Tangy Tomato Flavoured Makhana Jar",
-                isPouch: false,
-              },
-            ];
-
-            return products.map((item, idx) => {
-              const currentSlotIndex = (idx + shiftIndex) % 3;
-              const slot = desktopSlots[currentSlotIndex];
-
-              return (
-                <motion.div
-                  key={item.id}
-                  style={{
-                    position: "absolute",
-                    cursor: "pointer",
-                    pointerEvents: "auto",
-                    transformStyle: "preserve-3d",
-                  }}
-                  animate={{
-                    left: uD(slot.x),
-                    top: uD(slot.y),
-                    width: uD(slot.w),
-                    height: uD(slot.h),
-                    rotate: slot.rotate,
-                    scale: slot.scale,
-                    zIndex: slot.zIndex,
-                  }}
-                  transition={{
-                    type: "spring",
-                    stiffness: 70,
-                    damping: 14,
-                    mass: 0.85,
-                  }}
-                  whileHover={{
-                    scale: slot.scale * 1.08,
-                    rotate: slot.rotate > 0 ? 3 : -3,
-                    zIndex: 30,
-                  }}
-                >
-                  <img
-                    src={item.img}
-                    alt={item.alt}
-                    draggable={false}
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      objectFit: "contain",
-                      filter: item.isPouch
-                        ? "drop-shadow(0 18px 28px rgba(0,0,0,0.22))"
-                        : "drop-shadow(0 14px 24px rgba(0,0,0,0.18))",
-                    }}
-                  />
-                </motion.div>
-              );
-            });
-          })()}
+          <video
+            ref={videoDesktopRef}
+            src="/packages-hero.mp4"
+            className="ee-packages-video"
+            autoPlay
+            loop
+            muted
+            playsInline
+            onEnded={(e) => {
+              e.currentTarget.currentTime = 0;
+              e.currentTarget.play().catch(() => {});
+            }}
+            style={{
+              zIndex: 2,
+            }}
+          />
         </div>
 
         {/* Headings & CTA Buttons */}
@@ -486,7 +462,12 @@ export default function HeroSection() {
           }}
         >
           <div className="ee-ticker-track">
-            {[...TICKER_ITEMS, ...TICKER_ITEMS, ...TICKER_ITEMS, ...TICKER_ITEMS].map((item, idx) => (
+            {[
+              ...TICKER_ITEMS,
+              ...TICKER_ITEMS,
+              ...TICKER_ITEMS,
+              ...TICKER_ITEMS,
+            ].map((item, idx) => (
               <span
                 key={idx}
                 style={{
@@ -496,7 +477,8 @@ export default function HeroSection() {
                   fontWeight: 700,
                   letterSpacing: "0.06em",
                   color: "#2C3E2D",
-                  fontFamily: "'Plus Jakarta Sans', Inter, system-ui, sans-serif",
+                  fontFamily:
+                    "'Plus Jakarta Sans', Inter, system-ui, sans-serif",
                   whiteSpace: "nowrap",
                   padding: `0 ${uD(28)}`,
                   textTransform: "uppercase",
@@ -720,91 +702,53 @@ export default function HeroSection() {
           </div>
         </motion.div>
 
-        {/* ── Mobile 3D Packaging Trio: Shifting Carousel (Every 2s) with 3D Depth ── */}
-        <div style={{ position: "absolute", inset: 0, pointerEvents: "none" }}>
-          {/* Radial ground shadows */}
+        {/* ── Mobile Packaging Video Centerpiece: Directly replacing the packages ── */}
+        <div
+          style={{
+            position: "absolute",
+            left: "50%",
+            top: uM(215),
+            transform: "translateX(-50%)",
+            width: uM(1100),
+            height: uM(275),
+            zIndex: 25,
+            pointerEvents: "auto",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          {/* Deep organic ground contact shadow beneath the jars */}
           <div
             style={{
-              ...boxM(100, 480, 280, 18),
+              position: "absolute",
+              bottom: uM(6),
+              width: "74%",
+              height: uM(22),
               background:
-                "radial-gradient(ellipse, rgba(70,55,30,.28), transparent 70%)",
-              zIndex: 5,
+                "radial-gradient(ellipse at 50% 50%, rgba(55,40,25,.34) 0%, rgba(65,48,30,.20) 45%, transparent 75%)",
+              zIndex: 1,
+              pointerEvents: "none",
+              filter: "blur(3px)",
             }}
           />
 
-          {(() => {
-            // 3 Mobile slot coordinates: Left (0), Center (1), Right (2)
-            const mobileSlots = [
-              { x: 20,  y: 260, w: 150, h: 225, rotate: -7, zIndex: 10, scale: 0.96 },
-              { x: 148, y: 225, w: 184, h: 260, rotate: 0,  zIndex: 20, scale: 1.08 },
-              { x: 310, y: 260, w: 150, h: 225, rotate: 7,  zIndex: 10, scale: 0.96 },
-            ];
-
-            const products = [
-              {
-                id: "jar-peri",
-                img: jarPeriPeri,
-                alt: "Enjoyeat Peri Peri Flavoured Makhana Jar",
-                isPouch: false,
-              },
-              {
-                id: "pouch-peri",
-                img: pouchPeriPeri,
-                alt: "Enjoyeat Peri Peri Makhana Pouch",
-                isPouch: true,
-              },
-              {
-                id: "jar-tomato",
-                img: jarTangyTomato,
-                alt: "Enjoyeat Tangy Tomato Flavoured Makhana Jar",
-                isPouch: false,
-              },
-            ];
-
-            return products.map((item, idx) => {
-              const currentSlotIndex = (idx + shiftIndex) % 3;
-              const slot = mobileSlots[currentSlotIndex];
-
-              return (
-                <motion.div
-                  key={item.id}
-                  style={{
-                    position: "absolute",
-                    pointerEvents: "auto",
-                  }}
-                  animate={{
-                    left: uM(slot.x),
-                    top: uM(slot.y),
-                    width: uM(slot.w),
-                    height: uM(slot.h),
-                    rotate: slot.rotate,
-                    scale: slot.scale,
-                    zIndex: slot.zIndex,
-                  }}
-                  transition={{
-                    type: "spring",
-                    stiffness: 70,
-                    damping: 14,
-                    mass: 0.85,
-                  }}
-                >
-                  <img
-                    src={item.img}
-                    alt={item.alt}
-                    draggable={false}
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      objectFit: "contain",
-                      filter: item.isPouch
-                        ? "drop-shadow(0 14px 22px rgba(0,0,0,0.22))"
-                        : "drop-shadow(0 10px 18px rgba(0,0,0,0.18))",
-                    }}
-                  />
-                </motion.div>
-              );
-            });
-          })()}
+          <video
+            ref={videoMobileRef}
+            src="/packages-hero.mp4"
+            className="ee-packages-video"
+            autoPlay
+            loop
+            muted
+            playsInline
+            onEnded={(e) => {
+              e.currentTarget.currentTime = 0;
+              e.currentTarget.play().catch(() => {});
+            }}
+            style={{
+              zIndex: 2,
+            }}
+          />
         </div>
 
         {/* ── Continuous Horizontal Flowing Advertisement / Highlights Ticker (Mobile) ── */}
@@ -826,7 +770,12 @@ export default function HeroSection() {
           }}
         >
           <div className="ee-ticker-track">
-            {[...TICKER_ITEMS, ...TICKER_ITEMS, ...TICKER_ITEMS, ...TICKER_ITEMS].map((item, idx) => (
+            {[
+              ...TICKER_ITEMS,
+              ...TICKER_ITEMS,
+              ...TICKER_ITEMS,
+              ...TICKER_ITEMS,
+            ].map((item, idx) => (
               <span
                 key={idx}
                 style={{
@@ -836,7 +785,8 @@ export default function HeroSection() {
                   fontWeight: 700,
                   letterSpacing: "0.06em",
                   color: "#2C3E2D",
-                  fontFamily: "'Plus Jakarta Sans', Inter, system-ui, sans-serif",
+                  fontFamily:
+                    "'Plus Jakarta Sans', Inter, system-ui, sans-serif",
                   whiteSpace: "nowrap",
                   padding: `0 ${uM(18)}`,
                   textTransform: "uppercase",
