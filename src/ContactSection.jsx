@@ -296,14 +296,13 @@ export default function ContactSection() {
   };
 
   return (
-    <div className="ct-wrap">
+    <div className="ct-wrap" id="contact">
       <style>{CSS}</style>
 
       {/* ══════════════════════════════════════════════════════════════════
           DESKTOP VIEW (width >= 769px): 1024 x 572 Balanced Stage
       ══════════════════════════════════════════════════════════════════ */}
       <section
-        id="contact"
         className="ct-stage ct-desktop-only"
         aria-label="Get in Touch"
       >

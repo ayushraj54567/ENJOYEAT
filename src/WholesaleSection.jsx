@@ -59,14 +59,13 @@ export default function WholesaleSection() {
   };
 
   return (
-    <div className="ws-wrap">
+    <div className="ws-wrap" id="wholesale">
       <style>{CSS}</style>
 
       {/* ══════════════════════════════════════════════════════════════════
           DESKTOP VIEW (width >= 769px): 1024 x 572 Wide Canvas
       ══════════════════════════════════════════════════════════════════ */}
       <section
-        id="wholesale"
         className="ws-stage ws-desktop-only"
         aria-label="Partner with us — Wholesale"
       >

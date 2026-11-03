@@ -222,14 +222,13 @@ export default function HeroSection() {
   const isMobile = typeof window !== "undefined" && window.innerWidth <= 768;
 
   return (
-    <div className="ee-wrap" ref={sectionRef}>
+    <div className="ee-wrap" id="hero" ref={sectionRef}>
       <style>{CSS}</style>
 
       {/* ══════════════════════════════════════════════════════════════════
           DESKTOP VIEW (width >= 769px): 1024 x 559 Wide Canvas
       ══════════════════════════════════════════════════════════════════ */}
       <section
-        id="hero"
         className="ee-stage ee-desktop-only"
         aria-label="Enjoyeat Makhana hero"
       >

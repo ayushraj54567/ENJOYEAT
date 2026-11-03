@@ -27,7 +27,7 @@ const boxM = (x, y, w, h) => ({
   ...(h != null && { height: uM(h) }),
 });
 
-const SIZES = ["100g", "500g", "1kg"];
+const SIZES = ["100g", "250g"];
 
 /* Text stretched to the exact width for Desktop SVG text */
 function Fit({ x, y, w, size, children, className = "" }) {
@@ -101,14 +101,13 @@ export default function ChooseCrunchPage() {
   };
 
   return (
-    <div className="pg">
+    <div className="pg" id="shop">
       <style>{css}</style>
 
       {/* ══════════════════════════════════════════════════════════════════
           DESKTOP VIEW (width >= 769px): 2576 x 1438 Wide Stage
       ══════════════════════════════════════════════════════════════════ */}
       <section
-        id="shop"
         className="stage shop-desktop-only"
         aria-label="Choose your natural crunch"
       >
@@ -219,14 +218,14 @@ export default function ChooseCrunchPage() {
           </Fit>
           <a
             className="abs enq"
-            href="https://wa.me/919876543210?text=Hello%20EnjoyEat,%20I%20would%20like%20to%20order%20Flavoured%20Makhana%20(Foxnut)%20Jar"
+            href="https://wa.me/8084044728?text=Hello%20EnjoyEat,%20I%20would%20like%20to%20order%20Flavoured%20Makhana%20(Foxnut)%20Jar"
             target="_blank"
             rel="noopener noreferrer"
             onClick={(e) => {
               e.stopPropagation();
               window.open(
-                "https://wa.me/919876543210?text=Hello%20EnjoyEat,%20I%20would%20like%20to%20order%20Flavoured%20Makhana%20(Foxnut)%20Jar",
-                "_blank"
+                "https://wa.me/8084044728?text=Hello%20EnjoyEat,%20I%20would%20like%20to%20order%20Flavoured%20Makhana%20(Foxnut)%20Jar",
+                "_blank",
               );
             }}
             style={{
@@ -237,11 +236,15 @@ export default function ChooseCrunchPage() {
               cursor: "pointer",
             }}
           >
-            ENQUIRE NOW
+            ORDER NOW
           </a>
           <p
             className="abs szl"
-            style={{ ...posD(250, 1180, 340), fontSize: fsD(32), pointerEvents: "none" }}
+            style={{
+              ...posD(250, 1180, 340),
+              fontSize: fsD(32),
+              pointerEvents: "none",
+            }}
           >
             {SIZES.join(" | ")}
           </p>
@@ -325,7 +328,10 @@ export default function ChooseCrunchPage() {
               const el = document.getElementById("wholesale");
               if (el) {
                 const navHeight = 72;
-                const pos = el.getBoundingClientRect().top + window.pageYOffset - navHeight;
+                const pos =
+                  el.getBoundingClientRect().top +
+                  window.pageYOffset -
+                  navHeight;
                 window.scrollTo({ top: Math.max(0, pos), behavior: "smooth" });
               }
             }}
@@ -337,7 +343,7 @@ export default function ChooseCrunchPage() {
               cursor: "pointer",
             }}
           >
-            ENQUIRE NOW
+            ORDER NOW
           </a>
         </motion.div>
       </section>
@@ -526,7 +532,7 @@ export default function ChooseCrunchPage() {
 
           {/* WhatsApp Direct Order CTA */}
           <a
-            href={`https://wa.me/919876543210?text=Hello%20EnjoyEat,%20I%20would%20like%20to%20order%20Makhana%20(Foxnut)%20-%20${size}`}
+            href={`https://wa.me/8084044728?text=Hello%20EnjoyEat,%20I%20would%20like%20to%20order%20Makhana%20(Foxnut)%20-%20${size}`}
             target="_blank"
             rel="noopener noreferrer"
             style={{
@@ -635,14 +641,14 @@ export default function ChooseCrunchPage() {
               Roasted &amp; Seasoned • Natural Crunch
             </span>
             <a
-              href="https://wa.me/919876543210?text=Hello%20EnjoyEat,%20I%20would%20like%20to%20order%20Flavoured%20Makhana%20(Foxnut)%20Jar"
+              href="https://wa.me/8084044728?text=Hello%20EnjoyEat,%20I%20would%20like%20to%20order%20Flavoured%20Makhana%20(Foxnut)%20Jar"
               target="_blank"
               rel="noopener noreferrer"
               onClick={(e) => {
                 e.stopPropagation();
                 window.open(
-                  "https://wa.me/919876543210?text=Hello%20EnjoyEat,%20I%20would%20like%20to%20order%20Flavoured%20Makhana%20(Foxnut)%20Jar",
-                  "_blank"
+                  "https://wa.me/8084044728?text=Hello%20EnjoyEat,%20I%20would%20like%20to%20order%20Flavoured%20Makhana%20(Foxnut)%20Jar",
+                  "_blank",
                 );
               }}
               style={{
