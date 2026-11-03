@@ -257,7 +257,7 @@ const CONTACT_ITEMS = [
   {
     label: "Phone / WhatsApp",
     value: "+91 80840 44728",
-    href: "https://wa.me/8084044728",
+    href: "https://wa.me/918084044728",
     icon: <PhoneIcon />,
   },
   {
@@ -292,7 +292,7 @@ export default function ContactSection() {
     const text = encodeURIComponent(
       `Hello EnjoyEat,\nName: ${formState.name}\nEmail/Phone: ${formState.email}\nMessage: ${formState.message}`,
     );
-    window.open(`https://wa.me/8084044728?text=${text}`, "_blank");
+    window.open(`https://wa.me/918084044728?text=${text}`, "_blank");
   };
 
   return (

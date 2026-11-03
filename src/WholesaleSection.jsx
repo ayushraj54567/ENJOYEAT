@@ -36,7 +36,7 @@ const PILLS = [
   "• Bulk Custom Quantities",
 ];
 
-const WHATSAPP_NUMBER = "8084044728";
+const WHATSAPP_NUMBER = "918084044728";
 
 export default function WholesaleSection() {
   const [form, setForm] = useState({

@@ -218,13 +218,13 @@ export default function ChooseCrunchPage() {
           </Fit>
           <a
             className="abs enq"
-            href="https://wa.me/8084044728?text=Hello%20EnjoyEat,%20I%20would%20like%20to%20order%20Flavoured%20Makhana%20(Foxnut)%20Jar"
+            href="https://wa.me/918084044728?text=Hello%20EnjoyEat,%20I%20would%20like%20to%20order%20Flavoured%20Makhana%20(Foxnut)%20Jar"
             target="_blank"
             rel="noopener noreferrer"
             onClick={(e) => {
               e.stopPropagation();
               window.open(
-                "https://wa.me/8084044728?text=Hello%20EnjoyEat,%20I%20would%20like%20to%20order%20Flavoured%20Makhana%20(Foxnut)%20Jar",
+                "https://wa.me/918084044728?text=Hello%20EnjoyEat,%20I%20would%20like%20to%20order%20Flavoured%20Makhana%20(Foxnut)%20Jar",
                 "_blank",
               );
             }}
@@ -532,7 +532,7 @@ export default function ChooseCrunchPage() {
 
           {/* WhatsApp Direct Order CTA */}
           <a
-            href={`https://wa.me/8084044728?text=Hello%20EnjoyEat,%20I%20would%20like%20to%20order%20Makhana%20(Foxnut)%20-%20${size}`}
+            href={`https://wa.me/918084044728?text=Hello%20EnjoyEat,%20I%20would%20like%20to%20order%20Makhana%20(Foxnut)%20-%20${size}`}
             target="_blank"
             rel="noopener noreferrer"
             style={{
@@ -641,13 +641,13 @@ export default function ChooseCrunchPage() {
               Roasted &amp; Seasoned • Natural Crunch
             </span>
             <a
-              href="https://wa.me/8084044728?text=Hello%20EnjoyEat,%20I%20would%20like%20to%20order%20Flavoured%20Makhana%20(Foxnut)%20Jar"
+              href="https://wa.me/918084044728?text=Hello%20EnjoyEat,%20I%20would%20like%20to%20order%20Flavoured%20Makhana%20(Foxnut)%20Jar"
               target="_blank"
               rel="noopener noreferrer"
               onClick={(e) => {
                 e.stopPropagation();
                 window.open(
-                  "https://wa.me/8084044728?text=Hello%20EnjoyEat,%20I%20would%20like%20to%20order%20Flavoured%20Makhana%20(Foxnut)%20Jar",
+                  "https://wa.me/918084044728?text=Hello%20EnjoyEat,%20I%20would%20like%20to%20order%20Flavoured%20Makhana%20(Foxnut)%20Jar",
                   "_blank",
                 );
               }}

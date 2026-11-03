@@ -58,7 +58,7 @@ export default function Navbar() {
 
   /* ── Smooth scroll handler with robust cross-browser / mobile fallback ── */
   const handleNav = (e, item) => {
-    if (item.isExternal) {
+    if (item && item.isExternal) {
       setMobileOpen(false);
       return; // allow default anchor navigation to external link
     }
@@ -71,23 +71,19 @@ export default function Navbar() {
     const href = typeof item === "string" ? item : item.href;
     const id = href.replace("#", "");
 
-    // Find the target element (mobile-specific or common wrapper/section)
-    const target =
-      document.getElementById(`${id}-mobile`) ||
-      document.getElementById(`${id}-mobile-wrap`) ||
-      document.getElementById(id) ||
-      document.querySelector(href);
+    // Small delay allows mobile drawer exit animation without interrupting scroll
+    setTimeout(() => {
+      // Find the target element (mobile-specific or common wrapper/section)
+      const target =
+        document.getElementById(`${id}-mobile`) ||
+        document.getElementById(`${id}-mobile-wrap`) ||
+        document.getElementById(id) ||
+        document.querySelector(href);
 
-    if (target) {
-      const navHeight = 72;
-      const elementPosition = target.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.pageYOffset - navHeight;
-
-      window.scrollTo({
-        top: Math.max(0, offsetPosition),
-        behavior: "smooth",
-      });
-    }
+      if (target) {
+        target.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }, 50);
   };
 
   return (
@@ -314,7 +310,7 @@ export default function Navbar() {
           >
             {/* WhatsApp Mobile Quick Button */}
             <a
-              href="https://wa.me/8084044728?text=Hello%20EnjoyEat,%20I%20would%20like%20to%20order%20Makhana"
+              href="https://wa.me/918084044728?text=Hello%20EnjoyEat,%20I%20would%20like%20to%20order%20Makhana"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center justify-center gap-2 py-2 px-4 rounded-lg font-semibold text-white text-xs uppercase tracking-wider mb-2"
