@@ -268,9 +268,9 @@ const CONTACT_ITEMS = [
   },
   {
     label: "Address",
-    value: "Sitamarhi, Bihar, India",
+    value: "Bihar, India",
     subtext: "📍 Open in Google Maps",
-    href: "https://maps.google.com/?q=Sitamarhi,+Bihar,+India",
+    href: "https://maps.google.com/?q=Bihar,+India",
     icon: <LocationPinIcon />,
   },
 ];
@@ -399,13 +399,13 @@ export default function ContactSection() {
         {/* Desktop Contact Card */}
         <motion.div
           style={{
-            ...boxD(54, 136, 380, 360),
-            background: "rgba(255, 255, 255, 0.82)",
+            ...boxD(54, 126, 380, 385),
+            background: "rgba(255, 255, 255, 0.84)",
             backdropFilter: "blur(16px)",
             WebkitBackdropFilter: "blur(16px)",
             border: "1.5px solid rgba(255, 255, 255, 0.95)",
             borderRadius: uD(18),
-            padding: `${uD(18)} ${uD(22)}`,
+            padding: `${uD(18)} ${uD(22)} ${uD(18)}`,
             boxShadow: "0 14px 34px rgba(50, 35, 15, 0.06)",
             boxSizing: "border-box",
             display: "flex",
@@ -538,34 +538,6 @@ export default function ContactSection() {
               >
                 <InstagramIcon />
               </a>
-              <a
-                href={INSTAGRAM_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Facebook"
-                style={{
-                  width: uD(26),
-                  height: uD(26),
-                  display: "flex",
-                  alignItems: "center",
-                }}
-              >
-                <FacebookIcon />
-              </a>
-              <a
-                href={INSTAGRAM_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="YouTube"
-                style={{
-                  width: uD(26),
-                  height: uD(26),
-                  display: "flex",
-                  alignItems: "center",
-                }}
-              >
-                <YouTubeIcon />
-              </a>
             </div>
           </div>
         </motion.div>
@@ -604,8 +576,8 @@ export default function ContactSection() {
             }}
           >
             <iframe
-              title="Google Map Location - ENJOYEAT Sitamarhi Bihar"
-              src="https://maps.google.com/maps?q=Sitamarhi,+Bihar,+India&t=&z=11&ie=UTF8&iwloc=&output=embed"
+              title="Google Map Location - ENJOYEAT Bihar"
+              src="https://maps.google.com/maps?q=Bihar,+India&t=&z=11&ie=UTF8&iwloc=&output=embed"
               style={{
                 width: "100%",
                 height: "100%",
@@ -748,13 +720,13 @@ export default function ContactSection() {
         {/* ── MOBILE CARD: Contact Info Card (Left) ── */}
         <motion.div
           style={{
-            ...boxM(16, 88, 224, 275),
+            ...boxM(16, 84, 224, 288),
             background: "rgba(255, 255, 255, 0.88)",
             backdropFilter: "blur(16px)",
             WebkitBackdropFilter: "blur(16px)",
             border: "1.5px solid rgba(255, 255, 255, 0.95)",
             borderRadius: uM(14),
-            padding: `${uM(12)} ${uM(12)}`,
+            padding: `${uM(12)} ${uM(12)} ${uM(12)}`,
             boxShadow: "0 10px 24px rgba(50, 35, 15, 0.07)",
             boxSizing: "border-box",
             display: "flex",
@@ -921,7 +893,7 @@ export default function ContactSection() {
           >
             <iframe
               title="Google Map Location - ENJOYEAT Mobile"
-              src="https://maps.google.com/maps?q=Sitamarhi,+Bihar,+India&t=&z=11&ie=UTF8&iwloc=&output=embed"
+              src="https://maps.google.com/maps?q=Bihar,+India&t=&z=11&ie=UTF8&iwloc=&output=embed"
               style={{
                 width: "100%",
                 height: "100%",
@@ -932,28 +904,6 @@ export default function ContactSection() {
               allowFullScreen
             />
           </div>
-
-          <a
-            href="https://maps.google.com/?q=Sitamarhi,+Bihar,+India"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{
-              marginTop: uM(8),
-              display: "inline-flex",
-              alignItems: "center",
-              gap: uM(4),
-              padding: `${uM(4)} ${uM(10)}`,
-              borderRadius: uM(14),
-              background: "#7e8458",
-              color: "#ffffff",
-              fontSize: uM(9),
-              fontWeight: 600,
-              textDecoration: "none",
-              boxShadow: "0 2px 6px rgba(126, 132, 88, 0.28)",
-            }}
-          >
-            <span>📍</span> Google Maps
-          </a>
         </motion.div>
 
         {/* Mobile Footer */}
