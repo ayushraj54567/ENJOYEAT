@@ -1,5 +1,5 @@
-import React, { useState, useRef } from "react";
-import { motion, useScroll, useTransform, useSpring } from "framer-motion";
+import React, { useState } from "react";
+import { motion } from "framer-motion";
 import { useReducedMotionSafe } from "./hooks/useReducedMotionSafe";
 import book from "./story_book.jpg";
 import pond from "./assets/story_real_harvest.jpeg";
@@ -39,12 +39,9 @@ const CSS = `
 }
 @media (min-width: 769px) {
   .es-wrap {
-    height: 150vh;
+    height: auto;
   }
   .es-sticky-container {
-    position: sticky;
-    top: 72px;
-    height: calc(100vh - 72px);
     width: 100%;
     overflow: hidden;
     display: flex;
@@ -138,48 +135,10 @@ const W = 135;
 
 export default function EnjoyeatStory() {
   const [active, setActive] = useState(1);
-  const sectionRef = useRef(null);
   const reducedMotion = useReducedMotionSafe();
 
-  // Scroll tracking across Page 2 (Our Story)
-  // Reversible scroll progress: expands to cover page on scroll down, returns to original place when scrolling up!
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start start", "end end"],
-  });
-
-  const smoothProgress = useSpring(scrollYProgress, {
-    stiffness: 140,
-    damping: 24,
-    restDelta: 0.001,
-  });
-
-  // User requirement:
-  // "the book will properly cover the whole page when I was scrolling down and when I was scrolling to the upside the book was stuck in the middle So fix that properly like when I am scrolling to the upside and go back to the first page the book will be at the same place at the beginning"
-  // [0.0]: Starts on the right side at natural scale (1.0), 0cqw
-  // [0.0 -> 0.45]: Glides into the center (-26cqw) and expands to scale 2.25 so it completely covers the viewport!
-  // [0.45 -> 1.0]: Stays locked in the center covering the stage
-  // When user scrolls back up towards Page 1: Reverses smoothly back to 0cqw and scale 1.0 at the beginning!
-  const bookX = useTransform(
-    smoothProgress,
-    [0, 0.45, 1.0],
-    ["0cqw", "-26cqw", "-26cqw"],
-  );
-  const bookY = useTransform(
-    smoothProgress,
-    [0, 0.45, 1.0],
-    ["0cqw", "4cqw", "4cqw"],
-  );
-  const bookScale = useTransform(
-    smoothProgress,
-    [0, 0.45, 1.0],
-    [1, 2.25, 2.25],
-  );
-  const bookRotate = useTransform(smoothProgress, [0, 0.45, 1.0], [-2, 0, 0]);
-  const bookZIndex = useTransform(smoothProgress, [0, 0.15, 1.0], [10, 30, 30]);
-
   return (
-    <div className="es-wrap" id="our-story" ref={sectionRef}>
+    <div className="es-wrap" id="our-story">
       <style>{CSS}</style>
 
       {/* ══════════════════════════════════════════════════════════════════
@@ -329,7 +288,6 @@ export default function EnjoyeatStory() {
                   delay: 0.15 * i + 0.12,
                   ease: [0.2, 0.8, 0.2, 1],
                 }}
-                whileHover={reducedMotion ? {} : { y: -8, scale: 1.03 }}
                 onMouseEnter={() => setActive(i)}
                 style={{
                   ...boxD(c.x, 237, W),
@@ -418,19 +376,13 @@ export default function EnjoyeatStory() {
             ))}
           </div>
 
-          {/* Desktop Scrapbook Photo: Rapidly covers page, zooms in, and shifts left on scroll */}
-          <motion.div
+          {/* Desktop Scrapbook Photo: positioned naturally in layout without zoom in/out animation */}
+          <div
             style={{
               ...boxD(575, 78, 670, 424),
-              x: reducedMotion ? 0 : bookX,
-              y: reducedMotion ? 0 : bookY,
-              scale: reducedMotion ? 1 : bookScale,
-              rotate: reducedMotion ? 0 : bookRotate,
-              zIndex: reducedMotion ? 10 : bookZIndex,
+              zIndex: 10,
               cursor: "pointer",
-              transformOrigin: "center center",
             }}
-            whileHover={reducedMotion ? {} : { scale: 1.03 }}
           >
             <img
               className="es-book"
@@ -444,7 +396,7 @@ export default function EnjoyeatStory() {
                 mixBlendMode: "multiply",
               }}
             />
-          </motion.div>
+          </div>
         </section>
       </div>
 
@@ -500,19 +452,10 @@ export default function EnjoyeatStory() {
         </motion.div>
 
         {/* ── Mobile Scrapbook Photo (Prominent Centerpiece) ── */}
-        <motion.div
+        <div
           style={{
             ...boxM(24, 82, 432, 230),
             zIndex: 5,
-          }}
-          initial={reducedMotion ? {} : { opacity: 0, y: 30, scale: 0.94 }}
-          whileInView={{ opacity: 1, y: 0, scale: 1 }}
-          viewport={{ once: true }}
-          transition={{
-            type: "spring",
-            stiffness: 80,
-            damping: 14,
-            delay: 0.1,
           }}
         >
           <img
@@ -526,7 +469,7 @@ export default function EnjoyeatStory() {
               mixBlendMode: "multiply",
             }}
           />
-        </motion.div>
+        </div>
 
         {/* ── 3 Mobile Process Cards (Stacked Vertically for Perfect Legibility) ── */}
         <div style={{ position: "absolute", inset: 0, pointerEvents: "none" }}>

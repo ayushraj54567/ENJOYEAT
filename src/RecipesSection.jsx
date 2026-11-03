@@ -166,11 +166,6 @@ export default function RecipesSection() {
                     y: reducedMotion ? 0 : trans.y,
                     transformOrigin: 'center center',
                   }}
-                  whileHover={
-                    reducedMotion
-                      ? {}
-                      : { y: -8, scale: 1.03, boxShadow: '0 20px 40px rgba(60,40,20,0.15)', transition: { duration: 0.25 } }
-                  }
                 >
                   {/* Recipe Real Photo */}
                   <div style={{ position: 'relative', width: '100%', height: uD(160), overflow: 'hidden' }}>
