@@ -92,7 +92,7 @@ const CSS = `
 @media (min-width: 769px) {
   .ee-desktop-only {
     display: block;
-    aspect-ratio: 1024 / 559;
+    aspect-ratio: 1024 / 620;
     container-type: inline-size;
     overflow: hidden;
   }
@@ -106,10 +106,24 @@ const CSS = `
   }
   .ee-mobile-only {
     display: block;
-    aspect-ratio: 480 / 640;
+    aspect-ratio: 480 / 720;
     container-type: inline-size;
     overflow: hidden;
   }
+}
+
+/* Continuous scrolling ticker animation */
+@keyframes marqueeScroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.ee-ticker-track {
+  display: flex;
+  width: max-content;
+  animation: marqueeScroll 28s linear infinite;
+}
+.ee-ticker-track:hover {
+  animation-play-state: paused;
 }
 `;
 
@@ -184,9 +198,26 @@ function DecoD({ id, style = {} }) {
   );
 }
 
+const TICKER_ITEMS = [
+  "Zero chemicals",
+  "100% Organic",
+  "Crunchy",
+  "No Black Shell",
+  "Hygienically Packed",
+];
+
 export default function HeroSection() {
   const sectionRef = useRef(null);
+  const [shiftIndex, setShiftIndex] = useState(0);
   const reducedMotion = useReducedMotionSafe();
+
+  /* Cycle the 3 packages positions every 2 seconds */
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setShiftIndex((prev) => (prev + 1) % 3);
+    }, 2000);
+    return () => clearInterval(timer);
+  }, []);
 
   const isMobile = typeof window !== "undefined" && window.innerWidth <= 768;
 
@@ -211,7 +242,7 @@ export default function HeroSection() {
           }}
         >
           {Object.keys(DECO)
-            .filter((id) => id !== "bowl" && id !== "m11")
+            .filter((id) => id !== "bowl" && id !== "m11" && id !== "map")
             .map((id) => (
               <DecoD key={id} id={id} />
             ))}
@@ -241,7 +272,7 @@ export default function HeroSection() {
           ))}
         </div>
 
-        {/* ── 3D Center Packaging Trio: Pouch in Center & Jars on Both Sides (Pop-up from inside to outside) ── */}
+        {/* ── 3D Center Packaging Trio: Shifting Carousel (Every 2s) with 3D Depth ── */}
         <div
           style={{
             position: "absolute",
@@ -254,147 +285,93 @@ export default function HeroSection() {
           {/* Ground shadow under packages */}
           <div
             style={{
-              ...boxD(300, 440, 424, 26),
+              ...boxD(300, 480, 424, 26),
               background:
                 "radial-gradient(ellipse, rgba(70,55,30,.32), transparent 70%)",
               zIndex: 5,
             }}
           />
 
-          {/* LEFT JAR: Peri Peri Flavoured Makhana Jar (Enlarged) */}
-          <div
-            style={{
-              position: "absolute",
-              inset: 0,
-              transformStyle: "preserve-3d",
-              pointerEvents: "none",
-            }}
-          >
-            <motion.div
-              style={{
-                ...boxD(300, 260, 142, 215),
-                zIndex: 10,
-                cursor: "pointer",
-                pointerEvents: "auto",
-                transformStyle: "preserve-3d",
-              }}
-              initial={
-                reducedMotion
-                  ? {}
-                  : { scale: 0.15, x: 80, y: 30, opacity: 0, rotate: 0 }
-              }
-              animate={{ scale: 1.05, x: 0, y: 0, opacity: 1, rotate: -7 }}
-              transition={{
-                type: "spring",
-                stiffness: 75,
-                damping: 14,
-                mass: 0.85,
-                delay: 0.18,
-              }}
-              whileHover={{ scale: 1.12, rotate: -3, zIndex: 25 }}
-            >
-              <img
-                src={jarPeriPeri}
-                alt="Enjoyeat Peri Peri Flavoured Makhana Jar"
-                draggable={false}
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  objectFit: "contain",
-                  filter: "drop-shadow(0 14px 24px rgba(0,0,0,0.18))",
-                }}
-              />
-            </motion.div>
-          </div>
+          {(() => {
+            // 3 Desktop spot presets: Left (0), Center (1), Right (2) - Adjusted downward to create breathing room from CTA buttons
+            const desktopSlots = [
+              { x: 300, y: 300, w: 142, h: 215, rotate: -7, zIndex: 10, scale: 1.02 },
+              { x: 426, y: 262, w: 172, h: 252, rotate: 0,  zIndex: 20, scale: 1.12 },
+              { x: 582, y: 300, w: 142, h: 215, rotate: 7,  zIndex: 10, scale: 1.02 },
+            ];
 
-          {/* RIGHT JAR: Tangy Tomato Flavoured Makhana Jar (Enlarged) */}
-          <div
-            style={{
-              position: "absolute",
-              inset: 0,
-              transformStyle: "preserve-3d",
-              pointerEvents: "none",
-            }}
-          >
-            <motion.div
-              style={{
-                ...boxD(582, 260, 142, 215),
-                zIndex: 10,
-                cursor: "pointer",
-                pointerEvents: "auto",
-                transformStyle: "preserve-3d",
-              }}
-              initial={
-                reducedMotion
-                  ? {}
-                  : { scale: 0.15, x: -80, y: 30, opacity: 0, rotate: 0 }
-              }
-              animate={{ scale: 1.05, x: 0, y: 0, opacity: 1, rotate: 7 }}
-              transition={{
-                type: "spring",
-                stiffness: 75,
-                damping: 14,
-                mass: 0.85,
-                delay: 0.22,
-              }}
-              whileHover={{ scale: 1.12, rotate: 3, zIndex: 25 }}
-            >
-              <img
-                src={jarTangyTomato}
-                alt="Enjoyeat Tangy Tomato Flavoured Makhana Jar"
-                draggable={false}
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  objectFit: "contain",
-                  filter: "drop-shadow(0 14px 24px rgba(0,0,0,0.18))",
-                }}
-              />
-            </motion.div>
-          </div>
+            const products = [
+              {
+                id: "jar-peri",
+                img: jarPeriPeri,
+                alt: "Enjoyeat Peri Peri Flavoured Makhana Jar",
+                isPouch: false,
+              },
+              {
+                id: "pouch-peri",
+                img: pouchPeriPeri,
+                alt: "Enjoyeat Peri Peri Makhana Pouch",
+                isPouch: true,
+              },
+              {
+                id: "jar-tomato",
+                img: jarTangyTomato,
+                alt: "Enjoyeat Tangy Tomato Flavoured Makhana Jar",
+                isPouch: false,
+              },
+            ];
 
-          {/* CENTER POUCH: Peri Peri Makhana Pouch (Enlarged, Prominent Centerpiece) */}
-          <div
-            style={{
-              position: "absolute",
-              marginTop: 25,
-              inset: 0,
-              transformStyle: "preserve-3d",
-              pointerEvents: "none",
-            }}
-          >
-            <motion.div
-              style={{
-                ...boxD(426, 222, 172, 252),
-                zIndex: 20,
-                cursor: "pointer",
-                pointerEvents: "auto",
-                transformStyle: "preserve-3d",
-              }}
-              initial={reducedMotion ? {} : { scale: 0.1, y: 40, opacity: 0 }}
-              animate={{ scale: 1.12, y: 0, opacity: 1 }}
-              transition={{
-                type: "spring",
-                stiffness: 85,
-                damping: 15,
-                mass: 0.9,
-                delay: 0.05,
-              }}
-              whileHover={{ scale: 1.18, zIndex: 30 }}
-            >
-              <img
-                src={pouchPeriPeri}
-                alt="Enjoyeat Peri Peri Makhana Pouch"
-                draggable={false}
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  objectFit: "contain",
-                  filter: "drop-shadow(0 18px 28px rgba(0,0,0,0.22))",
-                }}
-              />
-            </motion.div>
-          </div>
+            return products.map((item, idx) => {
+              const currentSlotIndex = (idx + shiftIndex) % 3;
+              const slot = desktopSlots[currentSlotIndex];
+
+              return (
+                <motion.div
+                  key={item.id}
+                  style={{
+                    position: "absolute",
+                    cursor: "pointer",
+                    pointerEvents: "auto",
+                    transformStyle: "preserve-3d",
+                  }}
+                  animate={{
+                    left: uD(slot.x),
+                    top: uD(slot.y),
+                    width: uD(slot.w),
+                    height: uD(slot.h),
+                    rotate: slot.rotate,
+                    scale: slot.scale,
+                    zIndex: slot.zIndex,
+                  }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 70,
+                    damping: 14,
+                    mass: 0.85,
+                  }}
+                  whileHover={{
+                    scale: slot.scale * 1.08,
+                    rotate: slot.rotate > 0 ? 3 : -3,
+                    zIndex: 30,
+                  }}
+                >
+                  <img
+                    src={item.img}
+                    alt={item.alt}
+                    draggable={false}
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "contain",
+                      filter: item.isPouch
+                        ? "drop-shadow(0 18px 28px rgba(0,0,0,0.22))"
+                        : "drop-shadow(0 14px 24px rgba(0,0,0,0.18))",
+                    }}
+                  />
+                </motion.div>
+              );
+            });
+          })()}
         </div>
 
         {/* Headings & CTA Buttons */}
@@ -489,6 +466,58 @@ export default function HeroSection() {
           >
             Discover Our Story →
           </a>
+        </div>
+
+        {/* ── Continuous Horizontal Flowing Advertisement / Highlights Ticker (Desktop) ── */}
+        <div
+          style={{
+            position: "absolute",
+            bottom: 0,
+            left: 0,
+            width: "100%",
+            height: uD(38),
+            background: "#FBF7EF",
+            borderTop: "1px solid rgba(198, 178, 150, 0.45)",
+            borderBottom: "1px solid rgba(198, 178, 150, 0.35)",
+            display: "flex",
+            alignItems: "center",
+            overflow: "hidden",
+            zIndex: 65,
+            boxShadow: "0 -2px 10px rgba(50, 35, 20, 0.04)",
+          }}
+        >
+          <div className="ee-ticker-track">
+            {[...TICKER_ITEMS, ...TICKER_ITEMS, ...TICKER_ITEMS, ...TICKER_ITEMS].map((item, idx) => (
+              <span
+                key={idx}
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  fontSize: uD(11.2),
+                  fontWeight: 700,
+                  letterSpacing: "0.06em",
+                  color: "#2C3E2D",
+                  fontFamily: "'Plus Jakarta Sans', Inter, system-ui, sans-serif",
+                  whiteSpace: "nowrap",
+                  padding: `0 ${uD(28)}`,
+                  textTransform: "uppercase",
+                }}
+              >
+                {item}
+                <span
+                  style={{
+                    display: "inline-block",
+                    width: uD(5.5),
+                    height: uD(5.5),
+                    borderRadius: "50%",
+                    background: "#A48B69",
+                    marginLeft: uD(28),
+                    opacity: 0.85,
+                  }}
+                />
+              </span>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -692,7 +721,7 @@ export default function HeroSection() {
           </div>
         </motion.div>
 
-        {/* ── Mobile 3D Packaging Trio: Pouch in Center & Jars on Both Sides ── */}
+        {/* ── Mobile 3D Packaging Trio: Shifting Carousel (Every 2s) with 3D Depth ── */}
         <div style={{ position: "absolute", inset: 0, pointerEvents: "none" }}>
           {/* Radial ground shadows */}
           <div
@@ -704,99 +733,131 @@ export default function HeroSection() {
             }}
           />
 
-          {/* Left Jar: Peri Peri (Enlarged) */}
-          <motion.div
-            style={{
-              ...boxM(20, 260, 150, 225),
-              zIndex: 10,
-              pointerEvents: "auto",
-            }}
-            initial={
-              reducedMotion ? {} : { scale: 0.2, x: 70, y: 20, opacity: 0 }
-            }
-            animate={{ scale: 1.05, x: 0, y: 0, opacity: 1, rotate: -7 }}
-            transition={{
-              type: "spring",
-              stiffness: 75,
-              damping: 14,
-              mass: 0.85,
-              delay: 0.18,
-            }}
-          >
-            <img
-              src={jarPeriPeri}
-              alt="Enjoyeat Peri Peri Flavoured Makhana Jar"
-              draggable={false}
-              style={{
-                width: "100%",
-                height: "100%",
-                objectFit: "contain",
-                filter: "drop-shadow(0 10px 18px rgba(0,0,0,0.18))",
-              }}
-            />
-          </motion.div>
+          {(() => {
+            // 3 Mobile slot coordinates: Left (0), Center (1), Right (2)
+            const mobileSlots = [
+              { x: 20,  y: 260, w: 150, h: 225, rotate: -7, zIndex: 10, scale: 0.96 },
+              { x: 148, y: 225, w: 184, h: 260, rotate: 0,  zIndex: 20, scale: 1.08 },
+              { x: 310, y: 260, w: 150, h: 225, rotate: 7,  zIndex: 10, scale: 0.96 },
+            ];
 
-          {/* Right Jar: Tangy Tomato (Enlarged) */}
-          <motion.div
-            style={{
-              ...boxM(310, 260, 150, 225),
-              zIndex: 10,
-              pointerEvents: "auto",
-            }}
-            initial={
-              reducedMotion ? {} : { scale: 0.2, x: -70, y: 20, opacity: 0 }
-            }
-            animate={{ scale: 1.05, x: 0, y: 0, opacity: 1, rotate: 7 }}
-            transition={{
-              type: "spring",
-              stiffness: 75,
-              damping: 14,
-              mass: 0.85,
-              delay: 0.22,
-            }}
-          >
-            <img
-              src={jarTangyTomato}
-              alt="Enjoyeat Tangy Tomato Flavoured Makhana Jar"
-              draggable={false}
-              style={{
-                width: "100%",
-                height: "100%",
-                objectFit: "contain",
-                filter: "drop-shadow(0 10px 18px rgba(0,0,0,0.18))",
-              }}
-            />
-          </motion.div>
+            const products = [
+              {
+                id: "jar-peri",
+                img: jarPeriPeri,
+                alt: "Enjoyeat Peri Peri Flavoured Makhana Jar",
+                isPouch: false,
+              },
+              {
+                id: "pouch-peri",
+                img: pouchPeriPeri,
+                alt: "Enjoyeat Peri Peri Makhana Pouch",
+                isPouch: true,
+              },
+              {
+                id: "jar-tomato",
+                img: jarTangyTomato,
+                alt: "Enjoyeat Tangy Tomato Flavoured Makhana Jar",
+                isPouch: false,
+              },
+            ];
 
-          {/* Center Pouch: Peri Peri Makhana (Enlarged) */}
-          <motion.div
-            style={{
-              ...boxM(148, 225, 184, 260),
-              zIndex: 20,
-              pointerEvents: "auto",
-            }}
-            initial={reducedMotion ? {} : { scale: 0.15, y: 35, opacity: 0 }}
-            animate={{ scale: 1.12, y: 0, opacity: 1 }}
-            transition={{
-              type: "spring",
-              stiffness: 85,
-              damping: 15,
-              mass: 0.9,
-              delay: 0.05,
-            }}
-          >
-            <img
-              src={pouchPeriPeri}
-              alt="Enjoyeat Peri Peri Makhana Pouch"
-              draggable={false}
-              style={{
-                width: "100%",
-                height: "100%",
-                objectFit: "contain",
-                filter: "drop-shadow(0 14px 22px rgba(0,0,0,0.22))",
-              }}
-            />
-          </motion.div>
+            return products.map((item, idx) => {
+              const currentSlotIndex = (idx + shiftIndex) % 3;
+              const slot = mobileSlots[currentSlotIndex];
+
+              return (
+                <motion.div
+                  key={item.id}
+                  style={{
+                    position: "absolute",
+                    pointerEvents: "auto",
+                  }}
+                  animate={{
+                    left: uM(slot.x),
+                    top: uM(slot.y),
+                    width: uM(slot.w),
+                    height: uM(slot.h),
+                    rotate: slot.rotate,
+                    scale: slot.scale,
+                    zIndex: slot.zIndex,
+                  }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 70,
+                    damping: 14,
+                    mass: 0.85,
+                  }}
+                >
+                  <img
+                    src={item.img}
+                    alt={item.alt}
+                    draggable={false}
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "contain",
+                      filter: item.isPouch
+                        ? "drop-shadow(0 14px 22px rgba(0,0,0,0.22))"
+                        : "drop-shadow(0 10px 18px rgba(0,0,0,0.18))",
+                    }}
+                  />
+                </motion.div>
+              );
+            });
+          })()}
+        </div>
+
+        {/* ── Continuous Horizontal Flowing Advertisement / Highlights Ticker (Mobile) ── */}
+        <div
+          style={{
+            position: "absolute",
+            bottom: 0,
+            left: 0,
+            width: "100%",
+            height: uM(32),
+            background: "#FBF7EF",
+            borderTop: "1px solid rgba(198, 178, 150, 0.45)",
+            borderBottom: "1px solid rgba(198, 178, 150, 0.35)",
+            display: "flex",
+            alignItems: "center",
+            overflow: "hidden",
+            zIndex: 65,
+            boxShadow: "0 -2px 8px rgba(50, 35, 20, 0.04)",
+          }}
+        >
+          <div className="ee-ticker-track">
+            {[...TICKER_ITEMS, ...TICKER_ITEMS, ...TICKER_ITEMS, ...TICKER_ITEMS].map((item, idx) => (
+              <span
+                key={idx}
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  fontSize: uM(10),
+                  fontWeight: 700,
+                  letterSpacing: "0.06em",
+                  color: "#2C3E2D",
+                  fontFamily: "'Plus Jakarta Sans', Inter, system-ui, sans-serif",
+                  whiteSpace: "nowrap",
+                  padding: `0 ${uM(18)}`,
+                  textTransform: "uppercase",
+                }}
+              >
+                {item}
+                <span
+                  style={{
+                    display: "inline-block",
+                    width: uM(4.5),
+                    height: uM(4.5),
+                    borderRadius: "50%",
+                    background: "#A48B69",
+                    marginLeft: uM(18),
+                    opacity: 0.85,
+                  }}
+                />
+              </span>
+            ))}
+          </div>
         </div>
       </section>
     </div>
